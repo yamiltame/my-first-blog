@@ -3,5 +3,5 @@ from . import views
 
 urlpatterns = [
     url('uno', views.post_list, name='post_list'),
-    url('dos', views.post_2, name='post_2'),
+    url('', views.post_2, name='post_2'),
 ]
