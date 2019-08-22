@@ -1,0 +1,1 @@
+Escribe una funcion que lea las palabras de un archivo de texto. Construya una lista donde cada palabra es un elemento de la lista.

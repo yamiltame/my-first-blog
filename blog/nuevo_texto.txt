@@ -1,0 +1,1 @@
+Escri@ una funci@ que lea las palab@ de un archi@ de texto STOP Const@ una lista donde cada palab@ es un eleme@ de la lista@ STOPSTOP

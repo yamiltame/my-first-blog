@@ -1,0 +1,7 @@
+hola:hello
+adios:goodbye
+bienvenido:welcome
+pollo:chicken
+puerta:door
+suelo:floor
+ganancia:revenue
