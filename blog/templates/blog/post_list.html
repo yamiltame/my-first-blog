@@ -13,7 +13,9 @@
 	<a href="/admin">link_admin</a> <br>
 	<a href="/dos">link_dos</a>
 	<ul><li>primer</li><li>segundo</li></ul>
-	<div>division</div>
+	<div>Mostrara la consulta</div>
+	{% for post in posts %} <div><p> publicado:{{post.published_date}}</p><h1><a href="">{{post.title}}</a></h1>
+		<p>{{post.text|linebreaksbr}}</p></div>{% endfor %}
 </body>
 </html>
 
