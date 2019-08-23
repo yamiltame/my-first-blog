@@ -1,0 +1,15 @@
+function makeapp(){
+	python manage.py startapp $1;
+	}
+
+function makemigrations(){
+	python manage.py makemigrations $1;
+	}
+
+function migrate(){
+	python manage.py migrate $1;
+	}
+
+function ira(){
+	cd /opt/capacitacion/$1;
+	}

@@ -9,4 +9,5 @@ com:
 upl:
 	git push
 
-
+jaja:
+	@echo "fuck dawg"
