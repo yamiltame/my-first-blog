@@ -33,6 +33,11 @@ h1, h2, h3, h4 {
     float: right;
 }
 
+.glyphicon-plus {
+    padding-bottom: 50px;
+    color: #31EF19;
+}
+
 .post-form textarea, .post-form input {
     width: 100%;
 }
