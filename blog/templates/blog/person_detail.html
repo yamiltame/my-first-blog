@@ -1,0 +1,8 @@
+{% extends 'blog/base.html' %}
+
+{% block content %}
+    <div class="post">
+        <h1>{{ person.name }}</h1>
+        <p>{{ person.shirt_size|linebreaksbr }}</p>
+    </div>
+{% endblock %}

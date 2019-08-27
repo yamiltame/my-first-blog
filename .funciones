@@ -13,3 +13,7 @@ function migrate(){
 function ira(){
 	cd /opt/capacitacion/$1;
 	}
+
+function edit(){
+	nano -m $1;
+	}

@@ -1,0 +1,23 @@
+{% extends 'blog/base.html' %}
+
+{%block content_js %}
+<script type="text/javascript">
+	$(function(){
+		$('#id_fecha_nac').datepicker({
+            yearRange: "-20:+0",
+            format: 'yyyy-mm-dd',
+            language: "es"
+               
+		});
+
+	})
+</script>
+{%endblock%}
+
+{%block content%}
+    <h1>New person</h1>
+    <form method="POST" class="post-form">{% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="save btn btn-default">Save</button>
+    </form>
+{% endblock %}

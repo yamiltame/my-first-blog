@@ -5,34 +5,28 @@
         <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
         <link href="//fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext" rel="stylesheet" type="text/css">
         <link href="https://fonts.googleapis.com/css?family=VT323&display=swap" rel="stylesheet">
-
-        <link rel="stylesheet" href="{% static 'css/blog.css' %}">
-		<title>Blog1</title>
-		<style type="text/css">
-
-		</style>
+		<title>Punto de venta</title>
+		<style type="text/css"></style>
         <script   src="https://code.jquery.com/jquery-2.2.4.min.js"   integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="   crossorigin="anonymous"></script>
         <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-
         <link href="{% static 'plugins/datepicker/css/datepicker.css' %}" rel="stylesheet">
         <script src="{% static 'plugins/datepicker/js/bootstrap-datepicker.js' %}"></script>
-
         {% block content_js %}
         {% endblock %}
 	</head>
 <body>
+	
     <div class="page-header">
         {% if user.is_authenticated %}
-            <a href="{% url 'post_new' %}" class="top-menu"><span class='glyphicon glyphicon-plus'></button></a>
+            <a href="{% url 'marcas' %}" class="top-menu"><span class='glyphicon glyphicon-plus'>Nueva marca</button></a>
         {% endif %}
-        <h1><a href="/blog">Django Girls Blog</a></h1>
+        <h1><a href="/punto">PUNTO DE VENTA</a></h1>
     </div>
     <div class="content container">
         <div class="row">
             <div class="col-md-8">
-            <div><a href="/blog/person"> link </a></div>
-            <div><a href="/blog/people"> People </a></div>
-            <div><a href="/blog/test"> jQueryTests </a></div>
+            <div><a href="/punto/clientes"> clientes </a></div>
+            <div><a href="/punto/marcas"> Marcas </a></div>
             <div><a href="/punto/"> punto de venta </a></div>
             {% block content %}
             {% endblock %}

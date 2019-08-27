@@ -16,3 +16,20 @@ class Post(models.Model):
 
     def __str__(self):
         return self.title
+
+class Person(models.Model):
+    SHIRT_SIZES=(
+        ('s','small'),
+        ('m','medium'),
+        ('l','large'),
+    )
+    name=models.CharField(max_length=60)
+    shirt_size=models.CharField(max_length=2, choices=SHIRT_SIZES)
+    fecha_nac=models.DateField(blank=True,null=True)
+
+    def __str__(self):
+        return self.name
+
+
+
+
