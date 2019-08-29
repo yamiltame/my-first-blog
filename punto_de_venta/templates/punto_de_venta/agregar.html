@@ -1,0 +1,26 @@
+{% extends 'punto_de_venta/base.html' %}
+
+{% block content %}
+	
+	{%if tipo == 'marca' %}
+    <h1>Marca</h1>
+    {%endif%}
+
+    {%if tipo == 'medida'%}
+    <h1>Medida</h1>
+    {%endif%}
+    
+    {%if tipo == 'departamento'%}
+    <h1>Departamento</h1>
+    {%endif%}
+    
+    {%if tipo == 'producto'%}
+    <h1>Producto</h1>
+    {%endif%}
+    
+    <form method="POST" class="post-form">{% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="save btn btn-default">Guardar</button>
+    </form>
+
+{% endblock %}

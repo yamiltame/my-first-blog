@@ -1,9 +1,14 @@
 {% extends 'punto_de_venta/base.html' %}
 
 {% block content %}
-<h1> Añadir Cliente</h1>
+{%if tipo == 'cliente' %}
+<h1>Cliente </h1>
+{%endif%}
+{%if tipo == 'proveedor' %}
+<h1>Proveedor</h1>
+{%endif%}
     <form method="POST" class="post-form">{% csrf_token %}
-        {{cliente.as_p}}
+        {{humano.as_p}}
 		{{contacto.as_p}}
 		{{ubicacion.as_p}}
         <button type="submit" class="save btn btn-default">Añadir</button>

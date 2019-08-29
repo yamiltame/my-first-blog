@@ -1,11 +1,11 @@
 {% extends 'punto_de_venta/base.html' %}
 
 {% block content %}
-<h1> Añadir Cliente</h1>
+<h1> Añadir Proveedor</h1>
     <form method="POST" class="post-form">{% csrf_token %}
-        {{cliente.as_p}}
+    	{{proveedor.as_p}}
 		{{contacto.as_p}}
 		{{ubicacion.as_p}}
-        <button type="submit" class="save btn btn-default">Añadir</button>
+		<button type="submit" class="save btn btn-default">Añadir</button>
     </form>
 {% endblock %}

@@ -1,9 +1,9 @@
 {% extends 'punto_de_venta/base.html' %}
 
 {% block content %}
-    <h1>Nueva marca</h1>
+<h1> Añadir Producto</h1>
     <form method="POST" class="post-form">{% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="save btn btn-default">Save</button>
+        {{producto.as_p}}
+        <button type="submit" class="save btn btn-default">Añadir</button>
     </form>
 {% endblock %}

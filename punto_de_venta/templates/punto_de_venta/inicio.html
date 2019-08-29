@@ -1,0 +1,30 @@
+{% extends 'punto_de_venta/base.html' %}
+
+{%block content_js%}
+<script>
+  $( function() {
+    var availableTags = [
+    	{%for p in productos%}
+    		"{{p}}",
+    	{%endfor%}
+
+    ];
+    $( "#tags" ).autocomplete({
+      source: availableTags
+    });
+  } );
+  </script>
+{%endblock%}
+
+{%block content%}
+  <h1><a href="/punto">PUNTO DE VENTA</a></h1>
+  <body>
+ 
+<div class="ui-widget">
+  <label for="tags">Productos: </label>
+  <input id="tags">
+</div>
+ 
+ 
+</body>
+{%endblock%}
