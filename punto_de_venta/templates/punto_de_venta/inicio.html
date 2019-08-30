@@ -5,11 +5,24 @@
   $( function() {
     var availableTags = [
     	{%for p in productos%}
-    		"{{p}}",
+    		"{{p}} MARCA {{p.marca}}",
     	{%endfor%}
 
     ];
-    $( "#tags" ).autocomplete({
+    $( "#tagsp" ).autocomplete({
+      source: availableTags
+    });
+  } );
+  </script>
+  <script>
+  $( function() {
+    var availableTags = [
+      {%for c in clientes%}
+        "{{c}}",
+      {%endfor%}
+
+    ];
+    $( "#tagsc" ).autocomplete({
       source: availableTags
     });
   } );
@@ -19,10 +32,20 @@
 {%block content%}
   <h1><a href="/punto">PUNTO DE VENTA</a></h1>
   <body>
- 
 <div class="ui-widget">
-  <label for="tags">Productos: </label>
-  <input id="tags">
+  <label for="tagsp">Productos: </label>
+  <input id="tagsp">
+  <form method="POST" class="post-form">{% csrf_token %}
+    <button type="submit" class="save btn btn-default">agregar</button>
+  </form>
+</div>
+
+<div class="ui-widget">
+  <label for="tagsc">Clientes: </label>
+  <input id="tagsc">
+  <form method="POST" class="post-form">{% csrf_token %}
+    <button type="submit" class="save btn btn-default">Ir</button>
+  </form>
 </div>
  
  

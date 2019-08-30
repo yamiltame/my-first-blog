@@ -8,8 +8,9 @@ from forms import *
 from .tools import *
 
 def Inicio(request):
-	productos=Productos.objects.all().order_by('nombre')
-	return render(request,'punto_de_venta/inicio.html',{'productos': productos})
+	productos=Productos.objects.all()
+	clientes=get_catalogo('cliente')
+	return render(request,'punto_de_venta/inicio.html',{'productos': productos,'clientes':clientes})
 
 def agregar(request,tipo):
 	if request.method == "POST":
@@ -19,6 +20,7 @@ def agregar(request,tipo):
 			return redirect('catalogo',tipo=tipo)
 	else:
 		form=get_F(tipo)
+	print form
 	return render(request,'punto_de_venta/agregar.html',{'form':form,'tipo':tipo})
 
 def agregarhumano(request,tipo):
@@ -38,6 +40,7 @@ def agregarhumano(request,tipo):
 		form1=UbicacionForm()
 		form2=ContactoForm()
 		form3=get_F(tipo)
+	print form1,form2,form3
 	return render(request,'punto_de_venta/humanos.html',{'ubicacion':form1,'contacto':form2,'humano':form3,'tipo':tipo})
 
 def catalogo(request,tipo):
@@ -82,3 +85,16 @@ def editarhumano(request,tipo,pk):
 		form2=get_Fi('ubicacion',ubicacion)
 		form3=get_Fi('contacto',contacto)
 	return render(request,'punto_de_venta/humanos.html',{'humano':form1, 'ubicacion':form2, 'contacto':form3, 'tipo':tipo })
+
+def compra(request,cliente,operacion):
+	if reques.method=='POST':
+		detalle=DetalleVentaForm(request.POST)
+	return render(request,'punto_de_venta/compra.html',{})
+
+def cargarmunicipios(request):
+	estado_id=request.GET.get('estado')
+	municipios=Municipio.objects.filter(estado_id=estado_id).order_by('nombre')
+	return render(request,'punto_de_venta/municipios.html',{'municipios':municipios})
+
+def ejemplo(request):
+	return render(request,'punto_de_venta/ejemplo.html',{})

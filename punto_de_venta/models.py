@@ -108,7 +108,7 @@ class Caja_operacion(models.Model):
 class Detalle_Venta(models.Model):
 	producto=models.ForeignKey(Productos)
 	cantidad=models.DecimalField(max_digits=6,decimal_places=2)
-	porcentaje_descuento=models.IntegerField()
+	porcentaje_descuento=models.IntegerField(default=0)
 	descuento=models.DecimalField(max_digits=6,decimal_places=2)
 	venta=models.ForeignKey(Ventas)
 	iva=models.DecimalField(max_digits=6,decimal_places=2)

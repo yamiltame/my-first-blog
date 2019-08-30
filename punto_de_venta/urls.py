@@ -10,4 +10,6 @@ urlpatterns=[
 	url(r'^editarhumano/(?P<tipo>.*)/(?P<pk>\d+)/$',views.editarhumano,name='editarhumano'),
 	url(r'^editar/(?P<tipo>.*)/(?P<pk>\d+)/$',views.editar,name='editar'),
 	url(r'^eliminar/(?P<tipo>.*)/(?P<pk>\d+)/$',views.eliminar,name='eliminar'),
+	url(r'^ajax/cargarmunicipios/',views.cargarmunicipios,name='ajax_cargarmunicipios'),
+	url(r'^ejemplo/$',views.ejemplo,name='ejemplo'),
 	]

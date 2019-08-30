@@ -1,5 +1,15 @@
 {% extends 'punto_de_venta/base.html' %}
 
+{% block content_js %}
+<script type="text/javascript">
+    $(function(){
+        $("input").addClass('form-control');
+    });  
+</script>
+
+
+{%endblock%}
+
 {% block content %}
 	
 	{%if tipo == 'marca' %}
@@ -18,8 +28,17 @@
     <h1>Producto</h1>
     {%endif%}
     
-    <form method="POST" class="post-form">{% csrf_token %}
-        {{ form.as_p }}
+    <form method="POST">
+        {% csrf_token %}
+       
+        <div class="form-group">
+            <label for="exampleInputEmail1">{{form.nombre.label}}</label>
+            {{form.nombre}}
+            <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+        </div>
+
+            
+        
         <button type="submit" class="save btn btn-default">Guardar</button>
     </form>
 

@@ -1,16 +1,45 @@
 {% extends 'punto_de_venta/base.html' %}
 
+{%block content_js%}
+{%endblock%}
+
 {% block content %}
-{%if tipo == 'cliente' %}
-<h1>Cliente </h1>
-{%endif%}
-{%if tipo == 'proveedor' %}
-<h1>Proveedor</h1>
-{%endif%}
-    <form method="POST" class="post-form">{% csrf_token %}
-        {{humano.as_p}}
-		{{contacto.as_p}}
-		{{ubicacion.as_p}}
-        <button type="submit" class="save btn btn-default">Añadir</button>
-    </form>
+  {%if tipo == 'cliente' %}
+    <h1>Cliente </h1>
+  {%endif%}
+  {%if tipo == 'proveedor' %}
+    <h1>Proveedor</h1>
+  {%endif%}
+  <form method="POST" id='personForm' data-cities-url="{%url 'ajax_cargarmunicipios'%}"> {% csrf_token %}
+    <table class="table">
+      {{humano.as_table}}
+    </table>
+    <table class="table">
+      {{contacto.as_table}}
+    </table>
+    <table class="table">
+      {{ubicacion.as_table}}
+    </table>
+    <button type="submit" class="save btn btn-default">Añadir</button>
+  </form>
+  <script>
+    $(function(){
+
+        $("#id_estado").change(function () {
+          var url = $("#personForm").attr("data-cities-url");  // get the url of the `load_cities` view
+          var countryId = $(this).val();  // get the selected country ID from the HTML input
+          $.ajax({                       // initialize an AJAX request
+            url: '/punto/ajax/cargarmunicipios/',                    // set the url of the request (= localhost:8000/hr/ajax/load-cities/)
+            data: {
+              'estado': countryId       // add the country id to the GET parameters
+            },
+            dataType: 'html',
+            success: function (data) {   // `data` is the return of the `load_cities` view function
+              $("#id_municipio").html(data);  // replace the contents of the city input with the data that came from the server
+            }
+          });
+        });
+
+    })
+  </script>
 {% endblock %}
