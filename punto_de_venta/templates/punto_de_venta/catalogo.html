@@ -36,14 +36,16 @@
     {% endif %}
     <br>
 	<table border=1 class="table">
-		<tr>
-			<th>Nombre</th>
-			<th>Clave</th>
-			<th>RFC</th>
-			<th>Ubicación</th>
-			<th>Contacto</th>
-			<th>Acción</th>
-		</tr>
+		<thead>
+			<tr>
+				<th>Nombre</th>
+				<th>Clave</th>
+				<th>RFC</th>
+				<th>Ubicación</th>
+				<th>Contacto</th>
+				<th>Acción</th>
+			</tr>
+		</thead>
 		{%for cliente in lista%}
 		<tr>
 			<td>{{cliente}}</td>
@@ -64,11 +66,13 @@
     {% endif %}
     <br>
 	<table border=1 class="table">
-		<tr>
-			<th>Id</th>
-			<th>Nombre</th>
-			<th>Acción</th>
-		</tr>
+		<thead>
+			<tr>
+				<th>Id</th>
+				<th>Nombre</th>
+				<th>Acción</th>
+			</tr>
+		</thead>
 		{%for marca in lista%}
 		<tr>
 			<td>{{marca.pk}}</td>
@@ -86,11 +90,13 @@
     {% endif %}
     <br>
 	<table border=1 class="table">
-		<tr>
-			<th>Id</th>
-			<th>Nombre</th>
-			<th>Acción</th>
-		</tr>
+		<thead>
+			<tr>
+				<th>Id</th>
+				<th>Nombre</th>
+				<th>Acción</th>
+			</tr>
+		</thead>
 		{%for marca in lista%}
 		<tr>
 			<td>{{marca.pk}}</td>
@@ -108,11 +114,13 @@
     {% endif %}
     <br>
 	<table border=1 class="table">
-		<tr>
-			<th>Id</th>
-			<th>Nombre</th>
-			<th>Acción</th>
-		</tr>
+		<thead>
+			<tr>
+				<th>Id</th>
+				<th>Nombre</th>
+				<th>Acción</th>
+			</tr>
+		</thead>
 		{%for marca in lista%}
 		<tr>
 			<td>{{marca.pk}}</td>
@@ -130,16 +138,18 @@
     {% endif %}
     <br>
 	<table border=1 class="table">
-		<tr>
-			<th>Nombre</th>
-			<th>marca</th>
-			<th>Precio</th>
-			<th>Medida</th>
-			<th>Existencia</th>
-			<th>Proveedores</th>
-			<th>Departamento</th>
-			<th>Acción</th>
-		</tr>
+		<thead>
+			<tr>
+				<th>Nombre</th>
+				<th>marca</th>
+				<th>Precio</th>
+				<th>Medida</th>
+				<th>Existencia</th>
+				<th>Proveedores</th>
+				<th>Departamento</th>
+				<th>Acción</th>
+			</tr>
+		</thead>
 		{%for producto in lista%}
 		<tr>
 			<td>{{producto.nombre}}</td>

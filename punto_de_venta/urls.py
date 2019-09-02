@@ -11,5 +11,9 @@ urlpatterns=[
 	url(r'^editar/(?P<tipo>.*)/(?P<pk>\d+)/$',views.editar,name='editar'),
 	url(r'^eliminar/(?P<tipo>.*)/(?P<pk>\d+)/$',views.eliminar,name='eliminar'),
 	url(r'^ajax/cargarmunicipios/',views.cargarmunicipios,name='ajax_cargarmunicipios'),
+	url(r'^ajax/cargarmarcas/',views.cargarmarcas,name='ajax_cargarmarcas'),
+	url(r'^ajax/cargarmedidas/',views.cargarmedidas,name='ajax_cargarmedidas'),
+	url(r'^ajax/cargardepartamento/',views.cargardepartamento,name='ajax_cargardepartamento'),
 	url(r'^ejemplo/$',views.ejemplo,name='ejemplo'),
+	url(r'^compra/(?P<pk>\d+)/$',views.compra,name='compra'),
 	]

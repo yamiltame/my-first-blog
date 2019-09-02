@@ -1,27 +1,13 @@
 {% extends 'punto_de_venta/base.html' %}
 
 {%block content_js%}
-<script>
-  $( function() {
-    var availableTags = [
-    	{%for p in productos%}
-    		"{{p}} MARCA {{p.marca}}",
-    	{%endfor%}
-
-    ];
-    $( "#tagsp" ).autocomplete({
-      source: availableTags
-    });
-  } );
-  </script>
   <script>
   $( function() {
     var availableTags = [
       {%for c in clientes%}
         "{{c}}",
       {%endfor%}
-
-    ];
+      ];
     $( "#tagsc" ).autocomplete({
       source: availableTags
     });
@@ -30,24 +16,14 @@
 {%endblock%}
 
 {%block content%}
+<body>
   <h1><a href="/punto">PUNTO DE VENTA</a></h1>
-  <body>
-<div class="ui-widget">
-  <label for="tagsp">Productos: </label>
-  <input id="tagsp">
-  <form method="POST" class="post-form">{% csrf_token %}
-    <button type="submit" class="save btn btn-default">agregar</button>
-  </form>
-</div>
-
-<div class="ui-widget">
-  <label for="tagsc">Clientes: </label>
-  <input id="tagsc">
-  <form method="POST" class="post-form">{% csrf_token %}
-    <button type="submit" class="save btn btn-default">Ir</button>
-  </form>
-</div>
- 
- 
+  <div class="ui-widget">
+    <form method="POST" class="post-form">{% csrf_token %}
+      <label for="tagsc">Clientes: </label>
+      <input id="tagsc" name='tagsc'>
+      <button type="submit" class="save btn btn-default">Ir</button>
+    </form>
+  </div>
 </body>
 {%endblock%}

@@ -92,7 +92,7 @@ class Ventas(models.Model):
 	vendedor=models.ForeignKey('auth.User')
 	iva_total=models.DecimalField(max_digits=6,decimal_places=2)
 	subtotal=models.DecimalField(max_digits=6,decimal_places=2)
-
+	
 class Cajas(models.Model):
 	descripcion=models.CharField(max_length=100)
 	def __str__(self):

@@ -1,0 +1,29 @@
+{% extends 'punto_de_venta/base.html' %}
+
+{%block content_js%}
+<script>
+  $( function() {
+    var availableTags = [
+    	{%for p in productos%}
+    		"{{p}} MARCA {{p.marca}}",
+    	{%endfor%}
+
+    ];
+    $( "#tagsp" ).autocomplete({
+      source: availableTags
+    });
+  } );
+  </script>
+  {%endblock%}
+
+{%block content%}
+<body>
+	<div class="ui-widget">
+		<label for="tagsp">Productos: </label>
+		<input id="tagsp">
+		<form method="POST" class="post-form">{% csrf_token %}
+    		<button type="submit" class="save btn btn-default">agregar</button>
+  		</form>
+	</div>
+</body>
+{%endblock%}

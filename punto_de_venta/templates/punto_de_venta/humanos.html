@@ -1,6 +1,12 @@
 {% extends 'punto_de_venta/base.html' %}
 
 {%block content_js%}
+<script type="text/javascript">
+    $(function(){
+        $("input").addClass('form-control');
+    });  
+</script>
+
 {%endblock%}
 
 {% block content %}
@@ -10,21 +16,36 @@
   {%if tipo == 'proveedor' %}
     <h1>Proveedor</h1>
   {%endif%}
-  <form method="POST" id='personForm' data-cities-url="{%url 'ajax_cargarmunicipios'%}"> {% csrf_token %}
-    <table class="table">
-      {{humano.as_table}}
-    </table>
-    <table class="table">
-      {{contacto.as_table}}
-    </table>
-    <table class="table">
-      {{ubicacion.as_table}}
-    </table>
+
+  <div class="container">
+  <form method="POST" class="form-group" id='personForm' data-cities-url="{%url 'ajax_cargarmunicipios'%}"> {% csrf_token %}
+    <div class="row">
+      {%for field in humano%}
+        <div class="col-ms-4">
+          {{field}}
+        </div>
+      {%endfor%}
+    </div>
+    <div class="row">
+      <div class="col-ms-6">
+        {%for field in contacto%}
+          <div class="col-ms-3">
+            {{field}}
+          </div>
+        {%endfor%}
+      </div>
+      <div class="col-ms-6">
+        {%for field in ubicacion%}
+        <div class="col-ms-3">
+          {{field}}
+        </div>
+        {%endfor%}
+      </div>
+    </div>
     <button type="submit" class="save btn btn-default">Añadir</button>
   </form>
   <script>
     $(function(){
-
         $("#id_estado").change(function () {
           var url = $("#personForm").attr("data-cities-url");  // get the url of the `load_cities` view
           var countryId = $(this).val();  // get the selected country ID from the HTML input
@@ -39,7 +60,6 @@
             }
           });
         });
-
     })
   </script>
 {% endblock %}
