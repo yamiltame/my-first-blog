@@ -1,0 +1,13 @@
+{%for field in form%}
+	<label>{{field.name}}</label>
+	{{field}}
+{%endfor%}
+
+<script type="text/javascript">
+	function handler(){
+		$("select").addClass("form-control");
+	}
+	$(function(){
+		$("select").ready(handler);
+	});
+</script>

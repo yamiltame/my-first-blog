@@ -8,6 +8,7 @@
     {% endif %}
     <br>
 	<table border=1 class="table">
+	<thead>
 		<tr>
 			<th>Clave</th>
 			<th>Nombre</th>
@@ -16,6 +17,7 @@
 			<th>Contacto</th>
 			<th>Acción</th>
 		</tr>
+	</thead>
 		{%for cliente in lista%}
 		<tr>
 			<td>{{cliente.clave}}</td>
@@ -134,7 +136,7 @@
 	{%if tipo == 'producto'%}
 	<h1>Productos</h1>
     {% if user.is_authenticated %}
-        <a href="{% url 'agregar' tipo='producto' %}" class="top-menu"><span class='glyphicon glyphicon-plus'>Nuevo Producto</span></a>
+        <a href="{% url 'agregarproducto'%}" class="top-menu"><span class='glyphicon glyphicon-plus'>Nuevo Producto</span></a>
     {% endif %}
     <br>
 	<table border=1 class="table">

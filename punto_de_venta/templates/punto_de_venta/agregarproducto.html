@@ -1,0 +1,117 @@
+{% extends 'punto_de_venta/base.html' %}
+
+{% block content_js %}
+<script type="text/javascript">
+
+	function makebuttonnew(idnuevo,idafter){
+		boton="<button type='button' class='btn btn-primary' id='"+idnuevo+"'>Nuevo</button>";
+		$(boton).insertAfter(idafter);
+	}
+
+	function savebutton(id,direccion,idb,iddiv){
+		$(id).click(function(){
+			$.ajax({
+				url: direccion,
+				dataType:'html',
+				method: 'POST',
+				data:{
+					'nombre': $(idb).val(),
+					'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
+				},
+				success: function(data){
+					$(iddiv).html(data);
+				}
+			});
+		});
+	}
+
+	function makeclick(idboton,direcload,iddiv,idnewbtn,idinput,direcsave){
+		$(idboton).click(function (){
+			$.ajax({
+				url: direcload,
+				dataType: 'html',
+				success: function(data){
+					$(iddiv).html(data);
+					savebutton(idnewbtn,direcsave,idinput,iddiv);
+				}
+			});
+		});
+	}
+
+    $(document).ready(function(){
+    	$("input").addClass('form-control');
+        $("select").addClass('form-control');
+        //$("select").addClass('selectpicker');
+    	makebuttonnew('new_marca','#id_marca');
+    	makebuttonnew('new_medida','#id_medida');
+    	makebuttonnew('new_dpto','#id_dpto');
+    	makeclick('#new_marca','/punto/ajax/cargar/marca/','#marca','#btn_marca','#nuevomarca','/punto/ajax/nuevo/marca/');
+    	makeclick('#new_medida','/punto/ajax/cargar/medida/','#medida','#btn_medida','#nuevomedida','/punto/ajax/nuevo/medida/');
+    	makeclick('#new_dpto','/punto/ajax/cargar/departamento/','#dpto','#btn_departamento','#nuevodepartamento','/punto/ajax/nuevo/departamento/');
+    });
+</script>
+{%endblock%}
+
+{% block content %}
+    <h1>Producto</h1>
+    <div class="container">
+	    <form method="POST" id="formulario">{% csrf_token %}
+	    	<div class="row">
+		        <div class="col-sm-4">
+	            	<label>Codigo de barras</label>
+	            	{{form.codigo_barras}}
+		        </div>
+		        <div class="col-sm-4">
+	            	<label>SKU</label>
+	            	{{form.sku}}
+		        </div>
+		        <div class="col-sm-4">
+	            	<label>Nombre</label>
+	            	{{form.nombre}}
+		        </div>
+		    </div>
+		    <div class="row">
+		    	<div class="col-sm-4">
+		    		<label>Iva</label><br>
+		    		{{form.iva}}
+		    	</div>
+		    	<div class="col-sm-4">
+		    		<label>Precio</label>
+		    		{{form.precio}}
+		    	</div>
+		    	<div class="col-sm-4">
+		    		<label>Existencia</label>
+		    		{{form.existencia}}
+		    	</div>
+		    </div>
+		    <div class="row">
+		    	<div class="col-sm-4">
+		    		<label>Proveedores</label><br>
+		    		{{form.proveedores}}
+		    	</div>
+		    	<div class="col-sm-4">
+		    		<div id="dpto">
+		    			<label>Departamento</label><br>
+		    			{{form.dpto}}
+		    		</div>
+		    	</div>
+		    	<div class="col-sm-4">
+		    		<div id="marca">
+		    			<label>Marca</label><br>
+		    			{{form.marca}}
+		    		</div>
+		    	</div>
+		    </div>
+		    <div class="row">
+		    	<div class="col-sm-6">
+			    	<div id="medida">
+				    	<label>Unidad de medida</label><br>
+				    	{{form.medida}}
+				    </div>
+				</div>
+		    </div>
+	        <button type="submit" class="save btn btn-default">Guardar</button>
+	    </form>
+	</div>
+
+{%endblock%}

@@ -1,6 +1,12 @@
 from .models import *
 from forms import *
 
+diccionario={
+	'marca':{'marca':None},
+	'medida':{'medida':None},
+	'departamento':{'departamento':None},
+}
+
 #OBTENER CATALOGOS-----------
 def CMarca():
 	return Marca.objects.all()
@@ -198,3 +204,20 @@ def get_Fi(tipo,qs):
 	func=D.get(tipo, lambda: "no existe tipo")
 	return func(qs)
 #---------------------------------------
+def productomarca(valor):
+	return Productomarcaform(initial=valor)
+
+def productomedida(valor):
+	return Productomedidaform(initial=valor)
+
+def productodpto(valor):
+	return Productodptoform(initial=valor)
+
+def parcialproducto(tipo,valor):
+	D={
+		'marca': productomarca,
+		'medida': productomedida,
+		'departamento': productodpto
+	}
+	func=D.get(tipo)
+	return func(valor)

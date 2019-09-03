@@ -6,48 +6,6 @@
         $("input").addClass('form-control');
     });  
 </script>
-<script type="text/javascript">
-    $(function(){
-        $("<button type='button' id='new_marca'>nueva marca</button>").insertAfter("#id_marca");
-        //$("<button id='new_proveedor'>nuevo proveedor</button>").insertAfter("#id_proveedores");
-        $("<button type='button' id='new_medida'>nueva medida</button>").insertAfter("#id_medida");
-        $("<button type='button' id='new_dpto'>nuevo departamento</button>").insertAfter("#id_dpto");
-    });  
-</script>
-<script>
-    $(document).ready(function(){
-        $("#new_marca").click(function(){
-            $.ajax({
-                url: '/punto/ajax/cargarmarcas/',
-                dataType: 'html',
-                success: function(data){
-                    $(".marca").html(data);
-                    //$(data).insertAfter("#id_marca");
-                }
-            });
-        });
-        $("#new_medida").click(function(){
-            $.ajax({
-                url: '/punto/ajax/cargarmedidas/',
-                dataType: 'html',
-                success: function(data){
-                    $(".medida").html(data);
-                    //$(data).insertAfter("#id_marca");
-                }
-            });
-        });
-        $("#new_dpto").click(function(){
-            $.ajax({
-                url: '/punto/ajax/cargardepartamento/',
-                dataType: 'html',
-                success: function(data){
-                    $(".dpto").html(data);
-                    //$(data).insertAfter("#id_marca");
-                }
-            });
-        });
-    });
-</script>
 {%endblock%}
 
 {% block content %}
@@ -64,10 +22,6 @@
     <h1>Departamento</h1>
     {%endif%}
     
-    {%if tipo == 'producto'%}
-    <h1>Producto</h1>
-    {%endif%}
-
     <form method="POST" id="formulario">{% csrf_token %}
         {%for field in form%}
         <div class="{{field.name}}">

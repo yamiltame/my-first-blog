@@ -6,6 +6,7 @@ from django.shortcuts import render, redirect
 from .models import *
 from forms import *
 from .tools import *
+from django.http import HttpResponse
 
 def Inicio(request):
 	if request.method=='POST':
@@ -22,28 +23,22 @@ def Inicio(request):
 def agregar(request,tipo):
 	if request.method == "POST":
 		form=get_Fp(tipo,request)
-		marca=request.POST.get('nuevomarca')
-		medida=request.POST.get('nuevomedida')
-		dpto=request.POST.get('nuevodepartamento')
-		if marca:
-			mar=Marca(nombre=marca)
-			mar.save()
-		if medida:
-			med=Medidas(nombre=medida)
-			med.save()
-		if dpto:
-			dep=Departamento(nombre=dpto)
-			dep.save()
-		elemento=form.save(commmit=False)
 		if form.is_valid():
-			if(tipo=='producto'):
-				print "hastaki"
-				elemento=form.save(commit=False)
 			form.save()
 			return redirect('catalogo',tipo=tipo)
 	else:
 		form=get_F(tipo)
 	return render(request,'punto_de_venta/agregar.html',{'form':form,'tipo':tipo})
+
+def agregarproducto(request):
+	if request.method == "POST":
+		form=get_Fp('producto',request)
+		if form.is_valid():
+			form.save()
+			return redirect('catalogo',tipo='producto')
+	else:
+		form=get_F('producto')
+	return render(request,'punto_de_venta/agregarproducto.html',{'form':form})
 
 def agregarhumano(request,tipo):
 	if request.method=='POST':
@@ -116,17 +111,16 @@ def cargarmunicipios(request):
 	municipios=Municipio.objects.filter(estado_id=estado_id).order_by('nombre')
 	return render(request,'punto_de_venta/municipios.html',{'municipios':municipios})
 
-def cargarmarcas(request):
-	form=get_F('marca')
-	return render(request,'punto_de_venta/marcas.html',{'marca':form,'tipo':'marca'})
-
-def cargarmedidas(request):
-	form=get_F('medida')
-	return render(request,'punto_de_venta/marcas.html',{'marca':form,'tipo':'medida'})
-
-def cargardepartamento(request):
-	form=get_F('departamento')
-	return render(request,'punto_de_venta/marcas.html',{'marca':form,'tipo':'departamento'})
+def cargarelemento(request,tipo):
+	form=get_F(tipo)
+	return render(request,'punto_de_venta/marcas.html',{'marca':form,'tipo':tipo})
 
 def ejemplo(request):
 	return render(request,'punto_de_venta/ejemplo.html',{})
+
+def ajaxnuevo(request,tipo):
+	form=get_Fp(tipo,request) #dentro del request se obtiene POST.get('nombre')
+	elemento=form.save()
+	diccionario[tipo][tipo]=elemento
+	Form=parcialproducto(tipo,diccionario[tipo])
+	return render(request,'punto_de_venta/regresoselect.html',{'form':Form})

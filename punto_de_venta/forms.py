@@ -43,12 +43,30 @@ class ProductoForm(forms.ModelForm):
 	class Meta:
 		model= Productos
 		exclude=[]
-	def __init__(self,*args,**kwargs):
-		super(ProductoForm,self).__init__(*args,**kwargs)
-		self.fields["proveedores"].widget=forms.widgets.CheckboxSelectMultiple()
-		self.fields["proveedores"].queryset=Proveedores.objects.all()
-		self.fields["dpto"].widget=forms.widgets.CheckboxSelectMultiple()
-		self.fields["dpto"].queryset=Departamento.objects.all()
+
+class Productomarcaform(forms.ModelForm):
+	class Meta:
+		model=Productos
+		fields=['marca']
+#	def __init__(self,*args,**kwargs):
+#		super(Productomarcaform,self).__init__(*args,**kwargs)
+#		self.fields['marca'].widget.attrs['class']='selectpicker'
+
+class Productodptoform(forms.ModelForm):
+	class Meta:
+		model=Productos
+		fields=['dpto']
+#	def __init__(self,*args,**kwargs):
+#		super(Productodptoform,self).__init__(*args,**kwargs)
+#		self.fields['dpto'].widget.attrs['class']='selectpicker'
+
+class Productomedidaform(forms.ModelForm):
+	class Meta:
+		model=Productos
+		fields=['medida']
+#	def __init__(self,*args,**kwargs):
+#		super(Productomedidaform,self).__init__(*args,**kwargs)
+#		self.fields['medida'].widget.attrs['class']='selectpicker'
 
 class ProveedorForm(forms.ModelForm):
 	class Meta:
