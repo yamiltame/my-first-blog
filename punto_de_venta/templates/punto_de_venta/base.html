@@ -25,34 +25,14 @@
             <span class="icon-bar"></span>
           </button>
           <a class="navbar-brand" href="/punto">Inicio</a>
+          <a class="navbar-brand" href="{%url 'catalogo' tipo='producto'%}">Productos</a>
+          <a class="navbar-brand" href="{%url 'catalogo' tipo='cliente'%}">Clientes</a>
+          <a class="navbar-brand" href="{%url 'catalogo' tipo='proveedor'%}">Proveedores</a>
+          <a class="navbar-brand" href="{%url 'catalogo' tipo='marca'%}">Marcas</a>
+          <a class="navbar-brand" href="{%url 'catalogo' tipo='departamento'%}">Departamentos</a>
+          <a class="navbar-brand" href="{%url 'catalogo' tipo='medida'%}">Unidades de medida</a>
         </div>
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-          <ul class="nav navbar-nav">
-            <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Catálogos <span class="caret"></span></a>
-              <ul class="dropdown-menu">
-                <li><a href="{%url 'catalogo' tipo='cliente'%}">Clientes</a></li>
-                <li><a href="{%url 'catalogo' tipo='proveedor'%}">Proveedores</a></li>
-                <li><a href="{%url 'catalogo' tipo='producto'%}">Productos</a></li>
-                <li><a href="{%url 'catalogo' tipo='marca'%}">Marcas</a></li>
-                <li><a href="{%url 'catalogo' tipo='departamento'%}">Departamentos</a></li>
-                <li><a href="{%url 'catalogo' tipo='medida'%}">Unidades de Medida</a></li>
-              </ul>
-            </li>
-          </ul>
-          <ul class="nav navbar-nav">
-            <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Ingresar <span class="caret"></span></a>
-              <ul class="dropdown-menu">
-                <li><a href="{%url 'agregarhumano' tipo='cliente'%}">Clientes</a></li>
-                <li><a href="{%url 'agregarhumano' tipo='proveedor'%}">Proveedores</a></li>
-                <li><a href="{%url 'agregarproducto' %}">Productos</a></li>
-                <li><a href="{%url 'agregar' tipo='marca'%}">Marcas</a></li>
-                <li><a href="{%url 'agregar' tipo='departamento'%}">Departamentos</a></li>
-                <li><a href="{%url 'agregar' tipo='medida'%}">Unidades de Medida</a></li>
-              </ul>
-            </li>
-          </ul>
           <form class="navbar-form navbar-left">
             <div class="form-group">
               <input type="text" class="form-control" placeholder="Buscar">

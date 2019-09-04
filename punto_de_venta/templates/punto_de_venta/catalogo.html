@@ -1,177 +1,184 @@
 {% extends 'punto_de_venta/base.html' %}
 
 {%block content%}
-	{%if tipo == 'cliente'%}
-	<h1>Clientes</h1>
-    {% if user.is_authenticated %}
-        <a href="{% url 'agregarhumano' tipo='cliente'%}" class="top-menu"><span class='glyphicon glyphicon-plus'>Nuevo Cliente</span></a>
-    {% endif %}
-    <br>
-	<table border=1 class="table">
-	<thead>
-		<tr>
-			<th>Clave</th>
-			<th>Nombre</th>
-			<th>RFC</th>
-			<th>Ubicación</th>
-			<th>Contacto</th>
-			<th>Acción</th>
-		</tr>
-	</thead>
-		{%for cliente in lista%}
-		<tr>
-			<td>{{cliente.clave}}</td>
-			<td>{{cliente.nombre}}</td>
-			<td>{{cliente.rfc}}</td>
-			<td>{{cliente.ubicacion}}</td>
-			<td>{{cliente.contacto}}</td>
-			<td><a href="{%url 'editarhumano' tipo=tipo pk=cliente.pk%}">Editar  </a><a href="{%url 'eliminar' tipo=tipo pk=cliente.pk%}">Eliminar</a></td>
-		</tr>
-		{%endfor%}
-	</table>
-	{%endif%}
 
-	{%if tipo == 'proveedor'%}
-	<h1>Proveedores</h1>
-    {% if user.is_authenticated %}
-        <a href="{% url 'agregarhumano' tipo='proveedor' %}" class="top-menu"><span class='glyphicon glyphicon-plus'>Nuevo Proveedor</span></a>
-    {% endif %}
-    <br>
-	<table border=1 class="table">
-		<thead>
-			<tr>
-				<th>Nombre</th>
-				<th>Clave</th>
-				<th>RFC</th>
-				<th>Ubicación</th>
-				<th>Contacto</th>
-				<th>Acción</th>
-			</tr>
-		</thead>
-		{%for cliente in lista%}
-		<tr>
-			<td>{{cliente}}</td>
-			<td>{{cliente.clave}}</td>
-			<td>{{cliente.rfc}}</td>
-			<td>{{cliente.ubicacion}}</td>
-			<td>{{cliente.contacto}}</td>
-			<td><a href="{%url 'editarhumano' tipo=tipo pk=cliente.pk %}">Editar  </a><a href="{%url 'eliminar' tipo=tipo pk=cliente.pk%}">Eliminar</a></td>
-		</tr>
-		{%endfor%}
-	</table>
-	{%endif%}
-
-	{%if tipo == 'marca'%}
-	<h1>Marcas</h1>
-    {% if user.is_authenticated %}
-        <a href="{% url 'agregar' tipo=tipo %}" class="top-menu"><span class='glyphicon glyphicon-plus'>Nueva Marca</span></a>
-    {% endif %}
-    <br>
-	<table border=1 class="table">
-		<thead>
-			<tr>
-				<th>Id</th>
-				<th>Nombre</th>
-				<th>Acción</th>
-			</tr>
-		</thead>
-		{%for marca in lista%}
-		<tr>
-			<td>{{marca.pk}}</td>
-			<td>{{marca.nombre}}</td>
-			<td><a href="{%url 'editar' tipo=tipo pk=marca.pk%}">Editar  </a><a href="{%url 'eliminar' tipo=tipo pk=marca.pk%}">Eliminar</a></td>
-		</tr>
-		{%endfor%}
-	</table>
-	{%endif%}
-
-	{%if tipo == 'medida'%}
-	<h1>Unidades de Media</h1>
-    {% if user.is_authenticated %}
-        <a href="{% url 'agregar' tipo=tipo %}" class="top-menu"><span class='glyphicon glyphicon-plus'>Nueva Medida</span></a>
-    {% endif %}
-    <br>
-	<table border=1 class="table">
-		<thead>
-			<tr>
-				<th>Id</th>
-				<th>Nombre</th>
-				<th>Acción</th>
-			</tr>
-		</thead>
-		{%for marca in lista%}
-		<tr>
-			<td>{{marca.pk}}</td>
-			<td>{{marca.nombre}}</td>
-			<td><a href="{%url 'editar' tipo=tipo pk=marca.pk%}">Editar  </a><a href="{%url 'eliminar' tipo=tipo pk=marca.pk%}">Eliminar</a></td>
-		</tr>
-		{%endfor%}
-	</table>
-	{%endif%}
-
-	{%if tipo == 'departamento'%}
-	<h1>Departamentos</h1>
-    {% if user.is_authenticated %}
-        <a href="{% url 'agregar' tipo=tipo %}" class="top-menu"><span class='glyphicon glyphicon-plus'>Nuevo Departamento</span></a>
-    {% endif %}
-    <br>
-	<table border=1 class="table">
-		<thead>
-			<tr>
-				<th>Id</th>
-				<th>Nombre</th>
-				<th>Acción</th>
-			</tr>
-		</thead>
-		{%for marca in lista%}
-		<tr>
-			<td>{{marca.pk}}</td>
-			<td>{{marca.nombre}}</td>
-			<td><a href="{%url 'editar' tipo=tipo pk=marca.pk%}">Editar  </a><a href="{%url 'eliminar' tipo=tipo pk=marca.pk%}">Eliminar</a></td>
-		</tr>
-		{%endfor%}
-	</table>
-	{%endif%}
-	
-	{%if tipo == 'producto'%}
+{%if tipo == 'producto'%}
 	<h1>Productos</h1>
     {% if user.is_authenticated %}
-        <a href="{% url 'agregarproducto'%}" class="top-menu"><span class='glyphicon glyphicon-plus'>Nuevo Producto</span></a>
+        <a href="{% url 'agregarproducto'%}" class="top-menu"><span class='glyphicon glyphicon-plus'>agregar Producto</span></a>
     {% endif %}
-    <br>
-	<table border=1 class="table">
-		<thead>
-			<tr>
-				<th>Nombre</th>
-				<th>marca</th>
-				<th>Precio</th>
-				<th>Medida</th>
-				<th>Existencia</th>
-				<th>Proveedores</th>
-				<th>Departamento</th>
-				<th>Acción</th>
-			</tr>
-		</thead>
-		{%for producto in lista%}
-		<tr>
-			<td>{{producto.nombre}}</td>
-			<td>{{producto.marca}}</td>
-			<td>{{producto.precio}}</td>
-			<td>{{producto.medida}}</td>
-			<td>{{producto.existencia}}</td>
-			<td>
-				{%for prove in producto.proveedores.all%}
+{%endif%}
+
+{%if tipo == 'cliente'%}
+	<h1>Clientes</h1>
+   	{% if user.is_authenticated %}
+       	<a href="{% url 'agregarhumano' tipo='cliente'%}" class="top-menu"><span class='glyphicon glyphicon-plus'>agregar Cliente</span></a>
+    {% endif %}
+{%endif%}
+
+{%if tipo == 'proveedor'%}
+	<h1>Proveedores</h1>
+   	{% if user.is_authenticated %}
+       	<a href="{% url 'agregarhumano' tipo='proveedor' %}" class="top-menu"><span class='glyphicon glyphicon-plus'>agregar Proveedor</span></a>
+    {% endif %}
+{%endif%}
+
+{%if tipo == 'marca'%}
+	<h1>Marcas</h1>
+	{% if user.is_authenticated %}
+       	<a href="{% url 'agregar' tipo=tipo %}" class="top-menu"><span class='glyphicon glyphicon-plus'>agregar Marca</span></a>
+    {% endif %}
+{%endif%}
+
+{%if tipo == 'medida'%}
+	<h1>Unidades de Media</h1>
+	{% if user.is_authenticated %}
+       	<a href="{% url 'agregar' tipo=tipo %}" class="top-menu"><span class='glyphicon glyphicon-plus'>agregar Medida</span></a>
+    {% endif %}
+{%endif%}
+
+{%if tipo == 'departamento'%}
+	<h1>Departamentos</h1>
+   	{% if user.is_authenticated %}
+       	<a href="{% url 'agregar' tipo=tipo %}" class="top-menu"><span class='glyphicon glyphicon-plus'>agregar Departamento</span></a>
+    {% endif %}
+{%endif%}
+
+{%if tipo == 'cliente' or tipo == 'proveedor' %}
+    <br><br>
+	<div class="container" style="border:1px solid">
+		<div class="row" style="border:1px solid">
+			<div class="col-sm-2">
+				<h4><b>Clave</b></h4>
+			</div>
+			<div class="col-sm-2">
+				<h4><b>Nombre</b></h4>
+			</div>
+			<div class="col-sm-2">
+				<h4><b>RFC</b></h4>
+			</div>
+			<div class="col-sm-2">
+				<h4><b>Ubicación</b></h4>
+			</div>
+			<div class="col-sm-2">
+				<h4><b>Contacto</b></h4>
+			</div>
+			<div class="col-sm-2">
+				<h4><b>Acción</b></h4>
+			</div>
+		</div>
+		{%for cliente in lista%}
+		<div class="row" style="border:1px groove">
+			<div class="col-sm-2">
+				{{cliente.clave}}
+			</div>
+			<div class="col-sm-2">
+				{{cliente.nombre}}
+			</div>
+			<div class="col-sm-2">
+				{{cliente.rfc}}
+			</div>
+			<div class="col-sm-2">
+				{{cliente.ubicacion}}
+			</div>
+			<div class="col-sm-2">
+				{{cliente.contacto}}
+			</div>
+			<div class="col-sm-2">
+				<a href="{%url 'editarhumano' tipo=tipo pk=cliente.pk%}">Editar___</a><a href="{%url 'eliminar' tipo=tipo pk=cliente.pk%}">___Eliminar</a>
+			</div>
+		</div>
+		{%endfor%}
+	</div>
+{%elif tipo != 'producto'%}
+    <br><br>
+	<div class="container" style="border:1px solid">
+		<div class="row" style="border:1px solid">
+			<div class="col-sm-4">
+				<h4><b>Id</b></h4>
+			</div>
+			<div class="col-sm-4">
+				<h4><b>Nombre</b></h4>
+			</div>
+			<div class="col-sm-4">
+				<h4><b>Acción</b></h4>
+			</div>
+		</div>
+		{%for cliente in lista%}
+		<div class="row" style="border:1px groove">
+			<div class="col-sm-4">
+				{{cliente.pk}}
+			</div>
+			<div class="col-sm-4">
+				{{cliente.nombre}}
+			</div>
+			<div class="col-sm-2">
+				<a href="{%url 'editar' tipo=tipo pk=cliente.pk%}">Editar___</a><a href="{%url 'eliminar' tipo=tipo pk=cliente.pk%}">___Eliminar</a>
+			</div>
+		</div>
+		{%endfor%}
+	</div>
+{%else%}
+    <br><br>
+	<div class="container" style="border:1px solid">
+		<div class="row" style="border:1px solid">
+			<div class="col-sm-2">
+				<h4><b>Nombre</b></h4>
+			</div>
+			<div class="col-sm-1">
+				<h4><b>Marca</b></h4>
+			</div>
+			<div class="col-sm-1">
+				<h4><b>Precio</b></h4>
+			</div>
+			<div class="col-sm-1">
+				<h4><b>Stock</b></h4>
+			</div>
+			<div class="col-sm-1">
+				<h4><b>Medida</b></h4>
+			</div>
+			<div class="col-sm-2">
+				<h4><b>Proveedores</b></h4>
+			</div>
+			<div class="col-sm-2">
+				<h4><b>Departamento</b></h4>
+			</div>
+			<div class="col-sm-1">
+				<h4><b>Acción</b></h4>
+			</div>
+		</div>
+		{%for cliente in lista%}
+		<div class="row" style="border:1px groove">
+			<div class="col-sm-2">
+				{{cliente.nombre}}
+			</div>
+			<div class="col-sm-1">
+				{{cliente.marca}}
+			</div>
+			<div class="col-sm-1">
+				{{cliente.precio}}
+			</div>
+			<div class="col-sm-1">
+				{{cliente.existencia}}
+			</div>
+			<div class="col-sm-1">
+				{{cliente.medida}}
+			</div>
+			<div class="col-sm-2">
+				{%for prove in cliente.proveedores.all%}
 					{{prove}},    
 				{%endfor%}
-			</td>
-			<td>
-				{%for prod in producto.dpto.all%}
+			</div>
+			<div class="col-sm-2">
+				{%for prod in cliente.dpto.all%}
 					{{prod}}, 
 				{%endfor%}
-			</td>
-			<td><a href="{%url 'editar' tipo=tipo pk=producto.pk%}">Editar  </a><a href="{%url 'eliminar' tipo=tipo pk=producto.pk%}">Eliminar</a></td>
-		</tr>
+			</div>
+			<div class="col-sm-1">
+				<a href="{%url 'editar' tipo=tipo pk=cliente.pk%}">Editar___</a><a href="{%url 'eliminar' tipo=tipo pk=cliente.pk%}">___Eliminar</a>
+			</div>
+		</div>
 		{%endfor%}
-	</table>
-	{%endif%}
+	</div>
+{%endif%}
 {%endblock%}

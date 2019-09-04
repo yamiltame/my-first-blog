@@ -5,6 +5,7 @@ diccionario={
 	'marca':{'marca':None},
 	'medida':{'medida':None},
 	'departamento':{'departamento':None},
+	'proveedor':{'departamento':None},
 }
 
 #OBTENER CATALOGOS-----------
@@ -213,11 +214,15 @@ def productomedida(valor):
 def productodpto(valor):
 	return Productodptoform(initial=valor)
 
+def productoproveedor(valor):
+	return Productoproveedorform(initial=valor)
+
 def parcialproducto(tipo,valor):
 	D={
 		'marca': productomarca,
 		'medida': productomedida,
-		'departamento': productodpto
+		'departamento': productodpto,
+		'proveedor': productoproveedor,
 	}
 	func=D.get(tipo)
 	return func(valor)

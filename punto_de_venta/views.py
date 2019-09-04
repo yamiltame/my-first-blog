@@ -113,14 +113,50 @@ def cargarmunicipios(request):
 
 def cargarelemento(request,tipo):
 	form=get_F(tipo)
-	return render(request,'punto_de_venta/marcas.html',{'marca':form,'tipo':tipo})
+	return render(request,'punto_de_venta/marcas.html',{'form':form,'tipo':tipo})
 
-def ejemplo(request):
-	return render(request,'punto_de_venta/ejemplo.html',{})
+def cargarhumano(request,tipo):
+	if request.method=='POST':
+		form1=UbicacionForm(request.POST)
+		form2=ContactoForm(request.POST)
+		form3=get_Fp(tipo,request)
+		if form1.is_valid() and form2.is_valid() and form3.is_valid():
+			ubicacion=form1.save()
+			contacto=form2.save()
+			humano=form3.save(commit=False)
+			humano.ubicacion =  ubicacion
+			humano.contacto =  contacto
+			humano.save()
+			return redirect('catalogo', tipo=tipo)
+	else:
+		form1=UbicacionForm()
+		form2=ContactoForm()
+		form3=get_F(tipo)
+	return render(request,'punto_de_venta/loadhumanos.html',{'ubicacion':form1,'contacto':form2,'humano':form3,'tipo':tipo})
+
 
 def ajaxnuevo(request,tipo):
-	form=get_Fp(tipo,request) #dentro del request se obtiene POST.get('nombre')
+	form=get_Fp(tipo,request)
 	elemento=form.save()
 	diccionario[tipo][tipo]=elemento
 	Form=parcialproducto(tipo,diccionario[tipo])
 	return render(request,'punto_de_venta/regresoselect.html',{'form':Form})
+
+def ajaxnuevohumano(request,tipo):
+	form1=get_Fp(tipo,request)
+	form2=get_Fp('ubicacion',request)
+	form3=get_Fp('contacto',request)
+	if form1.is_valid() and form2.is_valid() and form3.is_valid():
+		elemento=form1.save(commit=False)
+		ubicacion=form2.save()
+		contacto=form3.save()
+		elemento.ubicacion=ubicacion
+		elemento.contacto=contacto
+		elemento.save()
+	Form=parcialproducto(tipo,{'elemento':elemento})
+	return render(request,'punto_de_venta/regresoselect.html',{'form':Form})
+
+def ajaxregreso(request,tipo):
+	form=parcialproducto(tipo,diccionario[tipo])
+	print form
+	return render(request,'punto_de_venta/regresoselect.html',{'form':form})

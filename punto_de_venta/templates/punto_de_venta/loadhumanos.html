@@ -1,32 +1,31 @@
-{% extends 'punto_de_venta/base.html' %}
-
-{%block content_js%}
 <script type="text/javascript">
     $(function(){
         $("input").addClass('form-control');
     });  
 </script>
-
-{%endblock%}
-
-{% block content %}
   {%if tipo == 'cliente' %}
-    <h1>Cliente </h1>
+    <h2>Cliente</h2>
   {%endif%}
   {%if tipo == 'proveedor' %}
-    <h1>Proveedor</h1>
+    <h2>Proveedor</h2>
   {%endif%}
 
   <div class="container">
   <form method="POST" class="form-group" id='personForm' data-cities-url="{%url 'ajax_cargarmunicipios'%}"> {% csrf_token %}
     <div class="row">
       <h3>Datos</h3>
-      {%for field in humano%}
         <div class="col-sm-4">
-          <label>{{field.name}}</label>
-          {{field}}
+          <label>Clave</label>
+          {{humano.clave}}
         </div>
-      {%endfor%}
+        <div class="col-sm-4">
+          <label>RFC</label>
+          {{humano.rfc}}
+        </div>
+        <div class="col-sm-4">
+          <label>Nombre</label>
+          <input type="text" id="nombreproveedor" class="form-control">
+        </div>
     </div>
     <div class="row">
       <div class="col-sm-6">
@@ -76,7 +75,7 @@
         </div>
       </div>
     </div>
-    <button type="submit" class="save btn btn-default">Añadir</button>
+    <button type="button" id="btn_{{tipo}}" class='btn btn-primary'>Guardar Proveedor</button>
   </form>
   <script>
     $(function(){
@@ -96,4 +95,3 @@
         });
     })
   </script>
-{% endblock %}

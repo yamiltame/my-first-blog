@@ -56,17 +56,16 @@ class Productodptoform(forms.ModelForm):
 	class Meta:
 		model=Productos
 		fields=['dpto']
-#	def __init__(self,*args,**kwargs):
-#		super(Productodptoform,self).__init__(*args,**kwargs)
-#		self.fields['dpto'].widget.attrs['class']='selectpicker'
 
 class Productomedidaform(forms.ModelForm):
 	class Meta:
 		model=Productos
 		fields=['medida']
-#	def __init__(self,*args,**kwargs):
-#		super(Productomedidaform,self).__init__(*args,**kwargs)
-#		self.fields['medida'].widget.attrs['class']='selectpicker'
+
+class Productoproveedorform(forms.ModelForm):
+	class Meta:
+		model=Productos
+		fields=['proveedores']
 
 class ProveedorForm(forms.ModelForm):
 	class Meta:

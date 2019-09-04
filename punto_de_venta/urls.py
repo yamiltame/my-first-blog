@@ -13,7 +13,9 @@ urlpatterns=[
 	url(r'^eliminar/(?P<tipo>.*)/(?P<pk>\d+)/$',views.eliminar,name='eliminar'),
 	url(r'^ajax/cargarmunicipios/',views.cargarmunicipios,name='ajax_cargarmunicipios'),
 	url(r'^ajax/cargar/(?P<tipo>\w+)/$',views.cargarelemento,name='ajax_cargarelemento'),
+	url(r'^ajax/cargarhumano/(?P<tipo>\w+)/$',views.cargarhumano,name='ajax_cargarproveedor'),
 	url(r'^ajax/nuevo/(?P<tipo>\w+)/$',views.ajaxnuevo,name='ajaxnuevo'),
-	url(r'^ejemplo/$',views.ejemplo,name='ejemplo'),
+	url(r'^ajax/nuevohumano/(?P<tipo>\w+)/$',views.ajaxnuevohumano,name='ajaxnuevohumano'),
+	url(r'^ajax/regreso/(?P<tipo>\w+)/$',views.ajaxregreso,name='ajaxregreso'),
 	url(r'^compra/(?P<pk>\d+)/$',views.compra,name='compra'),
 	]

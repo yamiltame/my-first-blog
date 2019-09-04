@@ -2,13 +2,69 @@
 
 {% block content_js %}
 <script type="text/javascript">
-
+	function makebuttonselect(idnuevo,idafter){
+		console.log("-----makebuttonselect");
+		console.log(idnuevo);
+		console.log(idafter);
+		boton="<button type='button' class='btn btn-primary' id='"+idnuevo+"'>Seleccionar</button>";
+		$(boton).insertAfter(idafter);
+	}
 	function makebuttonnew(idnuevo,idafter){
+		console.log("-----makebuttonnew");
+		console.log(idnuevo);
+		console.log(idafter);
 		boton="<button type='button' class='btn btn-primary' id='"+idnuevo+"'>Nuevo</button>";
 		$(boton).insertAfter(idafter);
 	}
+	function savebuttonproveedor(id,direccion,iddiv){
+		$(id).click(function(){
+			$.ajax({
+				url: direccion,
+				dataType:'html',
+				method: 'POST',
+				data:{
+					'clave': $('#id_clave').val(),
+					'rfc': $('#id_rfc').val(),
+					'nombre': $('#nombreproveedor').val(),
+					'tel': $('#id_tel').val(),
+					'cel': $('#id_cel').val(),
+					'email': $('#id_email').val(),
+					'facebook': $('#id_facebook').val(),
+					'calle': $('#id_calle').val(),
+					'colonia': $('#id_colonia').val(),
+					'no_ext': $('#id_no_ext').val(),
+					'no_int': $('#id_no_int').val(),
+					'estado': $('#id_estado').val(),
+					'municipio': $('#id_municipio').val(),
+					'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
+				},
+				success: function(data){
+					$(iddiv).html(data);
+				}
+			});
+		});
+	}
+
+	function makeclickproveedor(idboton,direcload,iddiv,idnewbtn,direcsave){
+		$(idboton).click(function (){
+			$.ajax({
+				url: direcload,
+				dataType: 'html',
+				success: function(data){
+					$(iddiv).html(data);
+					savebuttonproveedor(idnewbtn,direcsave,iddiv);
+					makebuttonselect('select_proveedor',idnewbtn);
+				}
+			});
+		});
+	}
 
 	function savebutton(id,direccion,idb,iddiv){
+		console.log("-----savebutton");
+		console.log(id);
+		console.log(direccion);
+		console.log(idb);
+		console.log(iddiv);
 		$(id).click(function(){
 			$.ajax({
 				url: direccion,
@@ -25,7 +81,36 @@
 		});
 	}
 
-	function makeclick(idboton,direcload,iddiv,idnewbtn,idinput,direcsave){
+	function makeclickselect(iddiv,campo){
+		console.log("-----makeclickselect");
+		console.log(iddiv);
+		idbtn="#select_"+campo;
+		direccion="/punto/ajax/regreso/"+campo+"/";
+		console.log(idbtn);
+		console.log(direccion);
+		$(idbtn).click(function(){
+			$.ajax({
+				url: direccion,
+				dataType:'html',
+				success: function(data){
+					$(iddiv).html(data);
+					if (campo != 'departamento')
+						makebuttonnew('new_'+campo,'#id_'+campo);
+					else
+						makebuttonnew('new_'+campo,'#id_dpto');
+					makeclick('#new_'+campo,"/punto/ajax/cargar/"+campo+"/",iddiv,'#btn_'+campo,'#nuevo'+campo,"/punto/ajax/nuevo/"+campo+"/",campo);
+				}
+			});
+		});
+	}
+	function makeclick(idboton,direcload,iddiv,idnewbtn,idinput,direcsave,campo){
+		console.log("-----makeclick");
+		console.log(idboton);
+		console.log(direcload);
+		console.log(iddiv);
+		console.log(idnewbtn);
+		console.log(idinput);
+		console.log(direcsave);
 		$(idboton).click(function (){
 			$.ajax({
 				url: direcload,
@@ -33,21 +118,27 @@
 				success: function(data){
 					$(iddiv).html(data);
 					savebutton(idnewbtn,direcsave,idinput,iddiv);
+					makebuttonselect("select_"+campo,idnewbtn);
+					makeclickselect(iddiv,campo);
 				}
 			});
 		});
 	}
 
+
+
     $(document).ready(function(){
     	$("input").addClass('form-control');
         $("select").addClass('form-control');
-        //$("select").addClass('selectpicker');
     	makebuttonnew('new_marca','#id_marca');
     	makebuttonnew('new_medida','#id_medida');
     	makebuttonnew('new_dpto','#id_dpto');
-    	makeclick('#new_marca','/punto/ajax/cargar/marca/','#marca','#btn_marca','#nuevomarca','/punto/ajax/nuevo/marca/');
-    	makeclick('#new_medida','/punto/ajax/cargar/medida/','#medida','#btn_medida','#nuevomedida','/punto/ajax/nuevo/medida/');
-    	makeclick('#new_dpto','/punto/ajax/cargar/departamento/','#dpto','#btn_departamento','#nuevodepartamento','/punto/ajax/nuevo/departamento/');
+    	makebuttonnew('new_proveedor','#id_proveedores');
+    	makeclickproveedor('#new_proveedor','/punto/ajax/cargarhumano/proveedor/','#proveedor','#btn_proveedor','/punto/ajax/nuevohumano/proveedor/');
+
+    	makeclick('#new_marca','/punto/ajax/cargar/marca/','#marca','#btn_marca','#nuevomarca','/punto/ajax/nuevo/marca/',"marca");
+    	makeclick('#new_medida','/punto/ajax/cargar/medida/','#medida','#btn_medida','#nuevomedida','/punto/ajax/nuevo/medida/','medida');
+    	makeclick('#new_dpto','/punto/ajax/cargar/departamento/','#dpto','#btn_departamento','#nuevodepartamento','/punto/ajax/nuevo/departamento/','departamento');
     });
 </script>
 {%endblock%}
@@ -86,10 +177,6 @@
 		    </div>
 		    <div class="row">
 		    	<div class="col-sm-4">
-		    		<label>Proveedores</label><br>
-		    		{{form.proveedores}}
-		    	</div>
-		    	<div class="col-sm-4">
 		    		<div id="dpto">
 		    			<label>Departamento</label><br>
 		    			{{form.dpto}}
@@ -101,15 +188,20 @@
 		    			{{form.marca}}
 		    		</div>
 		    	</div>
-		    </div>
-		    <div class="row">
-		    	<div class="col-sm-6">
+		    	<div class="col-sm-4">
 			    	<div id="medida">
 				    	<label>Unidad de medida</label><br>
 				    	{{form.medida}}
 				    </div>
-				</div>
+		    	</div>
 		    </div>
+		    <div class="row">
+	    		<div id="proveedor">
+		    		<label>Proveedores</label><br>
+		    		{{form.proveedores}}
+		    	</div>
+		    </div>
+		    <br>
 	        <button type="submit" class="save btn btn-default">Guardar</button>
 	    </form>
 	</div>

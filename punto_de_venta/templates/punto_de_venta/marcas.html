@@ -1,9 +1,7 @@
-{%for field in marca%}
 {%if tipo == 'departamento'%}
 	<label for="{{field.name}}">Nuevo {{tipo}}</label>
 {%else%}
 	<label for="{{field.name}}">Nueva {{tipo}}</label>
 {%endif%}
 	<input type='text' name="nuevo{{tipo}}" id="nuevo{{tipo}}" class="form-control">
-	<button type="button" id="btn_{{tipo}}" class='btn btn-primary'>Guardar</button>
-{%endfor%}
+	<button type="button" id="btn_{{tipo}}" class='btn btn-primary'>Guardar {{tipo}}</button>
