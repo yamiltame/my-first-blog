@@ -81,16 +81,16 @@
   <script>
     $(function(){
         $("#id_estado").change(function () {
-          var url = $("#personForm").attr("data-cities-url");  // get the url of the `load_cities` view
-          var countryId = $(this).val();  // get the selected country ID from the HTML input
-          $.ajax({                       // initialize an AJAX request
-            url: '/punto/ajax/cargarmunicipios/',                    // set the url of the request (= localhost:8000/hr/ajax/load-cities/)
+          var url = $("#personForm").attr("data-cities-url"); 
+          var countryId = $(this).val();  
+          $.ajax({                      
+            url: '/punto/ajax/cargarmunicipios/',          
             data: {
-              'estado': countryId       // add the country id to the GET parameters
+              'estado': countryId 
             },
             dataType: 'html',
-            success: function (data) {   // `data` is the return of the `load_cities` view function
-              $("#id_municipio").html(data);  // replace the contents of the city input with the data that came from the server
+            success: function (data) {   
+              $("#id_municipio").html(data);  
             }
           });
         });

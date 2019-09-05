@@ -26,7 +26,7 @@ class UbicacionForm(forms.ModelForm):
 			except (ValueError,TypeError):
 				pass
 		elif self.instance.pk:
-			self.fields['municipio'].queryset=self.instance.estado.municio_set.order_by('nombre')
+			self.fields['municipio'].queryset=self.instance.estado.municipio_set.order_by('nombre')
 
 
 class ContactoForm(forms.ModelForm):

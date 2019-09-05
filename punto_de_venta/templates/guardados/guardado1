@@ -1,0 +1,6 @@
+  <h1>PUNTO DE VENTA</h1>
+    <form method="POST">{% csrf_token %}
+      <label>Clientes: </label>
+      <input type="text" id="tagsc" name='tagsc'>
+      <button type="submit" class="btn btn-primary">Ir</button>
+    </form>

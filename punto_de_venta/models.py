@@ -25,12 +25,16 @@ class Marca(models.Model):
 class Ubicacion(models.Model):
 	calle=models.CharField(max_length=100)
 	no_ext=models.CharField(max_length=10)
-	no_int=models.CharField(max_length=10,null=True)
+	no_int=models.CharField(max_length=10,null=True,blank=True)
 	colonia=models.CharField(max_length=100)
 	estado=models.ForeignKey(Estados)
 	municipio=models.ForeignKey(Municipio)
 	def __str__(self):
-		return (self.calle+" ext. "+self.no_ext+" int. "+self.no_int+" Col. "+self.colonia+" "+self.municipio.nombre+","+self.estado.nombre).encode('utf-8')
+		if(self.no_int != None):
+			return (self.calle+" #"+self.no_ext+" int. "+self.no_int+" Col. "+self.colonia+" "+self.municipio.nombre+","+self.estado.nombre).encode('utf-8')
+		else:
+			return (self.calle+" #"+self.no_ext+" Col. "+self.colonia+" "+self.municipio.nombre+","+self.estado.nombre).encode('utf-8')
+
 
 class Contacto(models.Model):
 	tel=models.CharField(max_length=10)

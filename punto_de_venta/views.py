@@ -9,13 +9,6 @@ from .tools import *
 from django.http import HttpResponse
 
 def Inicio(request):
-	if request.method=='POST':
-		try:
-			cliente=Clientes.objects.get(nombre=request.POST.get('tagsc'))
-			pk=cliente.pk
-			return redirect('compra',pk=pk)
-		except:
-			print "no existe"
 	productos=get_catalogo('producto')
 	clientes=get_catalogo('cliente')
 	return render(request,'punto_de_venta/inicio.html',{'productos': productos,'clientes':clientes})
@@ -154,9 +147,17 @@ def ajaxnuevohumano(request,tipo):
 		elemento.contacto=contacto
 		elemento.save()
 	Form=parcialproducto(tipo,{'elemento':elemento})
+	print Form
 	return render(request,'punto_de_venta/regresoselect.html',{'form':Form})
 
 def ajaxregreso(request,tipo):
 	form=parcialproducto(tipo,diccionario[tipo])
 	print form
 	return render(request,'punto_de_venta/regresoselect.html',{'form':form})
+
+def ajaxdatoscliente(request,pk):
+	cliente=Clientes.objects.get(pk=pk)
+	return render(request,'punto_de_venta/loaddatoscliente.html',{'cliente':cliente})
+
+def ajaxdatosproducto(request):
+	return render(request,'punto_de_venta/loaddatosproducto.html',{})

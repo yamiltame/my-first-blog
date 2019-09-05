@@ -3,16 +3,10 @@
 {% block content_js %}
 <script type="text/javascript">
 	function makebuttonselect(idnuevo,idafter){
-		console.log("-----makebuttonselect");
-		console.log(idnuevo);
-		console.log(idafter);
 		boton="<button type='button' class='btn btn-primary' id='"+idnuevo+"'>Seleccionar</button>";
 		$(boton).insertAfter(idafter);
 	}
 	function makebuttonnew(idnuevo,idafter){
-		console.log("-----makebuttonnew");
-		console.log(idnuevo);
-		console.log(idafter);
 		boton="<button type='button' class='btn btn-primary' id='"+idnuevo+"'>Nuevo</button>";
 		$(boton).insertAfter(idafter);
 	}
@@ -54,17 +48,13 @@
 					$(iddiv).html(data);
 					savebuttonproveedor(idnewbtn,direcsave,iddiv);
 					makebuttonselect('select_proveedor',idnewbtn);
+					makeclickselectproveedor(iddiv);
 				}
 			});
 		});
 	}
 
 	function savebutton(id,direccion,idb,iddiv){
-		console.log("-----savebutton");
-		console.log(id);
-		console.log(direccion);
-		console.log(idb);
-		console.log(iddiv);
 		$(id).click(function(){
 			$.ajax({
 				url: direccion,
@@ -81,13 +71,24 @@
 		});
 	}
 
+	function makeclickselectproveedor(iddiv){
+		idbtn="#select_proveedor";
+		direccion="/punto/ajax/regreso/proveedor/";
+		$(idbtn).click(function(){
+			$.ajax({
+				url: direccion,
+				dataType:'html',
+				success: function(data){
+					$(iddiv).html(data);
+					makebuttonnew('new_proveedor','#id_proveedores');
+					makeclickproveedor('#new_proveedor',"/punto/ajax/cargarhumano/proveedor/",iddiv,'#btn_proveedor',"/punto/ajax/nuevohumano/proveedor/");
+				}
+			});
+		});
+	}
 	function makeclickselect(iddiv,campo){
-		console.log("-----makeclickselect");
-		console.log(iddiv);
 		idbtn="#select_"+campo;
 		direccion="/punto/ajax/regreso/"+campo+"/";
-		console.log(idbtn);
-		console.log(direccion);
 		$(idbtn).click(function(){
 			$.ajax({
 				url: direccion,
@@ -104,13 +105,6 @@
 		});
 	}
 	function makeclick(idboton,direcload,iddiv,idnewbtn,idinput,direcsave,campo){
-		console.log("-----makeclick");
-		console.log(idboton);
-		console.log(direcload);
-		console.log(iddiv);
-		console.log(idnewbtn);
-		console.log(idinput);
-		console.log(direcsave);
 		$(idboton).click(function (){
 			$.ajax({
 				url: direcload,
@@ -131,14 +125,16 @@
     	$("input").addClass('form-control');
         $("select").addClass('form-control');
     	makebuttonnew('new_marca','#id_marca');
+    	makeclick('#new_marca','/punto/ajax/cargar/marca/','#marca','#btn_marca','#nuevomarca','/punto/ajax/nuevo/marca/',"marca");
+
     	makebuttonnew('new_medida','#id_medida');
+    	makeclick('#new_medida','/punto/ajax/cargar/medida/','#medida','#btn_medida','#nuevomedida','/punto/ajax/nuevo/medida/','medida');
+
     	makebuttonnew('new_dpto','#id_dpto');
+    	makeclick('#new_dpto','/punto/ajax/cargar/departamento/','#dpto','#btn_departamento','#nuevodepartamento','/punto/ajax/nuevo/departamento/','departamento');
+
     	makebuttonnew('new_proveedor','#id_proveedores');
     	makeclickproveedor('#new_proveedor','/punto/ajax/cargarhumano/proveedor/','#proveedor','#btn_proveedor','/punto/ajax/nuevohumano/proveedor/');
-
-    	makeclick('#new_marca','/punto/ajax/cargar/marca/','#marca','#btn_marca','#nuevomarca','/punto/ajax/nuevo/marca/',"marca");
-    	makeclick('#new_medida','/punto/ajax/cargar/medida/','#medida','#btn_medida','#nuevomedida','/punto/ajax/nuevo/medida/','medida');
-    	makeclick('#new_dpto','/punto/ajax/cargar/departamento/','#dpto','#btn_departamento','#nuevodepartamento','/punto/ajax/nuevo/departamento/','departamento');
     });
 </script>
 {%endblock%}

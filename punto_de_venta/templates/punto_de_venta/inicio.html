@@ -1,29 +1,167 @@
 {% extends 'punto_de_venta/base.html' %}
 
 {%block content_js%}
-  <script>
-  $( function() {
-    var availableTags = [
-      {%for c in clientes%}
-        "{{c}}",
-      {%endfor%}
-      ];
-    $( "#tagsc" ).autocomplete({
-      source: availableTags
-    });
-  } );
-  </script>
+<script>
+clientestags= [
+  {%for cliente in clientes%}
+    {label: "{{cliente}}", value: "{{cliente.pk}}" }, 
+  {%endfor%}
+  ];
+productostags= [
+  {%for producto in productos%}
+    {label:"{{producto}}", value: "{{producto.pk}}" },
+  {%endfor%}
+  ];
+codigobarrastags= [
+  {%for producto in productos%}
+    {label: "{{producto.codigo_barras}}", value: "{{producto.pk}}" },
+  {%endfor%}
+  ];
+
+function getdatoscliente(iddiv){
+  $.ajax({
+    url: "/punto/ajax/getdatoscliente/"+$('#clientepk').val(),
+    dataType: 'html',
+    success: function(data){
+      $(iddiv).html(data);
+    }
+  });
+}
+
+function getdatosproducto(){
+  $.ajax({
+    url: "/punto/ajax/getdatosproducto/"+$('#productopk').val(),
+    dataType: 'html',
+    success: function(data){
+      console.log(data);
+    }
+  });
+}
+
+function makeautocomplete(idinput,tipo,idinputpk,fuente,iddiv,tipo){
+  $(idinput).autocomplete({
+    source:fuente,
+    focus: function(event,ui){
+      $(idinput).val(ui.item.label);
+      return false;
+    },
+    select: function(event,ui){
+      event.preventDefault();
+      $(idinput).val(ui.item.label);
+      $(idinputpk).val(ui.item.value);
+      if(tipo==0)
+        getdatoscliente('#datos_cliente');
+      else
+        getdatosproducto('#datos_producto');
+
+    }
+  });
+}
+
+$(document).ready(function(){
+  makeautocomplete('#cliente','cliente','#clientepk',clientestags,'#datos_cliente');
+  makeautocomplete('#producto','producto','#productopk',productostags,'#datos_producto');
+  makeautocomplete('#barcode','codigobarras','#productopk',codigobarrastags,'#datos_producto');
+
+});
+
+</script>
 {%endblock%}
 
 {%block content%}
 <body>
-  <h1><a href="/punto">PUNTO DE VENTA</a></h1>
-  <div class="ui-widget">
-    <form method="POST" class="post-form">{% csrf_token %}
-      <label for="tagsc">Clientes: </label>
-      <input id="tagsc" name='tagsc'>
-      <button type="submit" class="save btn btn-default">Ir</button>
-    </form>
+<div class="container">
+
+  <div class="row"><!--cliente-->
+    <div class="col-sm-2">
+      <big><big><b>Cliente</b></big></big>
+    </div>
+    <div class="col-sm-6">
+      <input id="cliente" name="Cliente" class="form-control">
+      <input id="clientepk" type="hidden" name="clientepk">
+    </div>
   </div>
+  <br>
+  <div id="datos_cliente">
+    <table class="table" border=1>
+     <thead>
+       <tr>
+         <th scope="col">Nombre</th>
+         <th scope="col">RFC</th>
+         <th scope="col">Dirección</th>
+         <th scope="col">Teléfono</th>
+       </tr>
+     </thead>
+     <tbody>
+       <tr>
+          <td>nombrecliente</td>
+          <td>rfccliente</td>
+          <td>direccioncliente</td>
+          <td>telefonocliente</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <br>
+  <div class="row"><!--Producto-->
+    <div class="col-sm-2">
+      <big><big><b>Producto</b></big></big>
+    </div>
+    <div class="col-sm-4">
+      <input id="producto" name="Producto" class="form-control">
+      <input id="productopk" type="hidden" name="productopk">
+    </div>
+  </div>
+
+  <div class="row" id='producto'>
+    <div class="col-sm-2" id="">
+      <label>Codigo de barras</label>
+      <input id="barcode" class="form-control">
+    </div>
+    <div class="col-sm-2" id="">
+      <label>Precio</label>
+      <input id="" class="form-control">
+    </div>
+    <div class="col-sm-2" id="">
+      <label>Cantidad</label>
+      <input id="" class="form-control">
+    </div>
+    <div class="col-sm-2" id="">
+      <label>Descuento</label>
+      <input id="" class="form-control">
+    </div>
+    <div class="col-sm-2" id="">
+      <br>
+      <button type="button" class="btn btn-primary">Añadir</button>
+    </div>
+  </div><!--FIN PRoducto-->
+
+  <br>
+  <div class="row" id="detalleventa">
+    <div class="col-sm-10">
+      <table class="table">
+        <thead>
+         <tr>
+           <th scope="col">#</th>
+           <th scope="col">Código barras</th>
+           <th scope="col">Producto</th>
+           <th scope="col">Precio</th>
+           <th scope="col">Cantidad</th>
+           <th scope="col">Descuento%</th>
+           <th scope="col">Importe</th>
+         </tr>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
+    </div>
+    <div class="col-sm-2">
+      <button type="button" class="btn btn-primary">Borrar productos seleccionados</button>
+    </div>
+  </div>
+</div><!--FIN Container-->
+
+
 </body>
 {%endblock%}

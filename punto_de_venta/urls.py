@@ -17,5 +17,7 @@ urlpatterns=[
 	url(r'^ajax/nuevo/(?P<tipo>\w+)/$',views.ajaxnuevo,name='ajaxnuevo'),
 	url(r'^ajax/nuevohumano/(?P<tipo>\w+)/$',views.ajaxnuevohumano,name='ajaxnuevohumano'),
 	url(r'^ajax/regreso/(?P<tipo>\w+)/$',views.ajaxregreso,name='ajaxregreso'),
+	url(r'^ajax/getdatoscliente/(?P<pk>\d+)/$',views.ajaxdatoscliente,name='ajaxdatoscliente'),
+	url(r'^ajax/getdatosproducto/(?P<pk>\d+)/$',views.ajaxdatosproducto,name='ajaxdatosproducto'),
 	url(r'^compra/(?P<pk>\d+)/$',views.compra,name='compra'),
 	]
