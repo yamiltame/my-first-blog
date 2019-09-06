@@ -159,5 +159,7 @@ def ajaxdatoscliente(request,pk):
 	cliente=Clientes.objects.get(pk=pk)
 	return render(request,'punto_de_venta/loaddatoscliente.html',{'cliente':cliente})
 
-def ajaxdatosproducto(request):
-	return render(request,'punto_de_venta/loaddatosproducto.html',{})
+def ajaxdatosproducto(request,pk):
+	producto=Productos.objects.get(pk=pk)
+	preciopublico=producto.precio*(producto.iva/100 +1)
+	return render(request,'punto_de_venta/loaddatosproducto.html',{'producto':producto,'preciopublico':preciopublico})

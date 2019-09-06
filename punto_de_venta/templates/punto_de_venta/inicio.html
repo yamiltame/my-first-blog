@@ -18,6 +18,14 @@ codigobarrastags= [
   {%endfor%}
   ];
 
+carrito={};
+filastabla={};
+camposdatos=['barcode','producto','precio','iva','cantidad','descuento','costo'];
+sumasubtotal=0;
+sumaivatotal=0;
+sumatotal=0;
+sumadescuento=0;
+
 function getdatoscliente(iddiv){
   $.ajax({
     url: "/punto/ajax/getdatoscliente/"+$('#clientepk').val(),
@@ -28,12 +36,16 @@ function getdatoscliente(iddiv){
   });
 }
 
-function getdatosproducto(){
+function getdatosproducto(iddiv){
   $.ajax({
     url: "/punto/ajax/getdatosproducto/"+$('#productopk').val(),
     dataType: 'html',
     success: function(data){
-      console.log(data);
+      $(iddiv).html(data);
+      makeautocomplete('#barcode','codigobarras','#productopk',codigobarrastags,'#datos_producto',1);
+      makeautocomplete('#producto','producto','#productopk',productostags,'#datos_producto',1);
+      makeactions();
+      calcularcosto();
     }
   });
 }
@@ -54,14 +66,140 @@ function makeautocomplete(idinput,tipo,idinputpk,fuente,iddiv,tipo){
       else
         getdatosproducto('#datos_producto');
 
+
     }
   });
 }
 
+function calcularcosto(){
+  var ttl=$('#precio').val()*$('#cantidad').val();
+  var tax=$('#iva').val() / 100 +1;
+  var desc= 1 - $('#descuento').val() /100;
+  $('#costo_articulo').val(ttl*tax*desc);
+  $('#sumaiva').val(ttl*$('#iva').val()/100);
+  $('#desctotal').val(ttl*$('#descuento').val()/100);
+  $('#subcosto').val(ttl);
+  console.log("--------valores calcularcosto");
+  console.log($('#costo_articulo').val());
+  console.log($('#sumaiva').val());
+  console.log($('#desctotal').val());
+  console.log($('#subcosto').val());
+}
+
+function makeclickdelete(clave){
+  console.log("-----makeclickdelete")
+  var idbtn="#btn_"+clave;
+  var id="#"+clave;
+  console.log(idbtn);
+  console.log(id);
+  $(idbtn).click(function(){
+    restartotales(clave);
+    $(id).remove();
+    delete carrito[clave];
+    console.log(carrito);
+  });
+}
+
+function resetproducto(){
+  $('#producto').val('');
+  $('#barcode').val('');
+  $('#precio').val('');
+  $('#iva').val('');
+  $('#cantidad').val('');
+  $('#descuento').val('');
+  $('#costo_articulo').val('');
+  $('#sumaiva').val('');
+  $('#desctotal').val('');
+  $('#subcosto').val('');
+}
+
+
+function agnadiratabla(datos){
+  fila="<tr id='"+datos['clave']+"'><td><button type='buton' class='btn btn-danger' id='btn_"+datos['clave']+"'>Quitar</button></td>";
+  for(c in camposdatos){
+    var llave=camposdatos[c];
+    fila=fila+"<td>"+datos[llave]+"</td>";
+  }
+  fila=fila+"</tr>";
+  idfila="#"+datos['clave'];
+  $(idfila).remove();
+  $('#table_body').append(fila);
+  makeclickdelete(datos['clave']);
+  resetproducto();
+  console.log(carrito);
+}
+
+function makeactions(){
+  $('#sumar').click(function(){
+    $('#cantidad').val(parseInt($('#cantidad').val())+1);
+    calcularcosto();
+  });
+  $('#restar').click(function(){
+    $('#cantidad').val(parseInt($('#cantidad').val())-1);
+    calcularcosto();
+  });
+  $('#setcantidad').click(function(){
+    calcularcosto();
+  });
+  $('#agnadir').click(function(){
+    calcularcosto();
+    if ($('#cliente').val() != ''){
+      var compra=$('#clientepk').val()+"_"+$('#productopk').val();
+      $('#cliente').change(function(){
+        alert("Cambiaste el cliente, se recargara la pagina");
+        document.location.reload(true);
+      });
+      var datos={
+        'clave': compra,
+        'producto': $('#producto').val(),
+        'barcode': $('#barcode').val(),
+        'precio': $('#precio').val(),
+        'iva': $('#iva').val(),
+        'cantidad': $('#cantidad').val(),
+        'descuento': $('#descuento').val(),
+        'costo': $('#costo_articulo').val(),
+        'sumaiva':$('#sumaiva').val(),
+        'desctotal':$('#desctotal').val(),
+        'subcosto':$('#subcosto').val(),
+      };
+      carrito[compra]=datos;
+      agnadiratabla(datos);
+      sumartotales(compra);
+    }
+    else{
+      alert("No hay cliente seleccionado");
+    }
+  });
+}
+
+function sumartotales(compra){
+  sumasubtotal=sumasubtotal+carrito[compra]['subtotal'];
+  sumaivatotal=sumaivatotal+carrito[compra]['sumaiva'];
+  sumadescuento=sumadescuento+carrito[compra]['desctotal'];
+  sumatotal=sumatotal+carrito[compra]['costo'];
+  $('#subtotal').val(sumasubtotal);
+  $('#ivatotal').val(sumaivatotal);
+  $('#descuentototal').val(sumadescuento);
+  $('#total').val(sumatotal);
+
+}
+
+function restartotales(compra){
+  sumasubtotal=sumasubtotal-carrito[compra]['subtotal'];
+  sumaivatotal=sumaivatotal-carrito[compra]['sumaiva'];
+  sumadescuento=sumadescuento-carrito[compra]['desctotal'];
+  sumatotal=sumatotal-carrito[compra]['costo'];
+  $('#subtotal').val(sumasubtotal);
+  $('#ivatotal').val(sumaivatotal);
+  $('#descuentototal').val(sumadescuento);
+  $('#total').val(sumatotal);
+
+}
+
 $(document).ready(function(){
-  makeautocomplete('#cliente','cliente','#clientepk',clientestags,'#datos_cliente');
-  makeautocomplete('#producto','producto','#productopk',productostags,'#datos_producto');
-  makeautocomplete('#barcode','codigobarras','#productopk',codigobarrastags,'#datos_producto');
+  makeautocomplete('#cliente','cliente','#clientepk',clientestags,'#datos_cliente',0);
+  makeautocomplete('#producto','producto','#productopk',productostags,'#datos_producto',1);
+  makeautocomplete('#barcode','codigobarras','#productopk',codigobarrastags,'#datos_producto',1);
 
 });
 
@@ -104,60 +242,100 @@ $(document).ready(function(){
   </div>
 
   <br>
-  <div class="row"><!--Producto-->
+  <div class="row" id='datos_producto'>
     <div class="col-sm-2">
-      <big><big><b>Producto</b></big></big>
-    </div>
-    <div class="col-sm-4">
+      <label>Producto</label>
       <input id="producto" name="Producto" class="form-control">
       <input id="productopk" type="hidden" name="productopk">
     </div>
-  </div>
-
-  <div class="row" id='producto'>
     <div class="col-sm-2" id="">
       <label>Codigo de barras</label>
       <input id="barcode" class="form-control">
     </div>
-    <div class="col-sm-2" id="">
+    <div class="col-sm-1" id="">
       <label>Precio</label>
-      <input id="" class="form-control">
+      <input id="precio" class="form-control" readonly>
     </div>
-    <div class="col-sm-2" id="">
+    <div class="col-sm-1" id="">
+      <label>IVA%</label>
+      <input id="iva" class="form-control" readonly>
+      <input id="sumaiva" type="hidden" name="sumaiva">
+    </div>
+    <div class="col-sm-1" id="">
       <label>Cantidad</label>
-      <input id="" class="form-control">
+      <input id="cantidad" class="form-control">
     </div>
-    <div class="col-sm-2" id="">
-      <label>Descuento</label>
-      <input id="" class="form-control">
+    <div class="col-sm-1" id="">
+      <label>Descnt%</label>
+      <input id="descuento" class="form-control">
+      <input id="desctotal" type="hidden" name="desctotal">
     </div>
-    <div class="col-sm-2" id="">
+    <div class="col-sm-1">
+      <label>Costo</label>
+      <input id="costo_articulo" class="form-control" readonly>
+      <input id="subcosto" type="hidden" name="subcosto">
+    </div>
+    <div class="col-sm-1" id="">
       <br>
-      <button type="button" class="btn btn-primary">Añadir</button>
+      <button type="button" id="sumar">
+        <span class='glyphicon glyphicon-plus'></span>
+      </button>
+      <button type="button" id="restar">
+        <span class='glyphicon glyphicon-minus'></span>
+      </button>
+      <button type="button" id="setcantidad">
+        establecer
+      </button>
+    </div>
+    <div class="col-sm-1">
+      <br>
+      <button type="button" id="agnadir" class="btn btn-primary">Añadir</button>
     </div>
   </div><!--FIN PRoducto-->
 
   <br>
   <div class="row" id="detalleventa">
-    <div class="col-sm-10">
-      <table class="table">
-        <thead>
-         <tr>
-           <th scope="col">#</th>
-           <th scope="col">Código barras</th>
-           <th scope="col">Producto</th>
-           <th scope="col">Precio</th>
-           <th scope="col">Cantidad</th>
-           <th scope="col">Descuento%</th>
-           <th scope="col">Importe</th>
-         </tr>
-        </thead>
-        <tbody>
-        </tbody>
+    <table class="table">
+      <thead>
+       <tr>
+         <th scope="col">#</th>
+         <th scope="col">Código barras</th>
+         <th scope="col">Producto</th>
+         <th scope="col">Precio</th>
+         <th scope="col">IVA%</th>
+         <th scope="col">Cantidad</th>
+         <th scope="col">Descuento%</th>
+         <th scope="col">Importe</th>
+       </tr>
+      </thead>
+      <tbody id="table_body">
+      </tbody>
+    </table>
+  </div>
+  <div class="row">
+    <div class="col-sm-8">
+    </div>
+    <div class="col-sm-4">
+    <div class="float-right">
+      <table class="table" border=1>
+        <tr>
+          <th scope="col"><small>subtotal</small></th>
+          <td><small><input id="subtotal" class="form-control" readonly></small></td>
+        </tr>
+        <tr>
+          <th scope="col"><small>Iva</small></th>
+          <td><small><input id="ivatotal" class="form-control" readonly></small></td>
+        </tr>
+        <tr>
+          <th scope="col"><small>Descuento</small></th>
+          <td><small><input id="descuentototal" class="form-control" readonly></small></td>
+        </tr>
+        <tr>
+          <th scope="col"><small>Total</small></th>
+          <td><small><input id="total" class="form-control" readonly></small></td>
+        </tr>
       </table>
     </div>
-    <div class="col-sm-2">
-      <button type="button" class="btn btn-primary">Borrar productos seleccionados</button>
     </div>
   </div>
 </div><!--FIN Container-->

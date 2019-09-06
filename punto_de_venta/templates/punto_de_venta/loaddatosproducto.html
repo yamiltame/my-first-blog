@@ -1,0 +1,48 @@
+<div class="col-sm-2">
+  <label>Producto</label>
+  <input id="producto" name="Producto" class="form-control" value="{{producto.nombre}}">
+  <input id="productopk" type="hidden" name="productopk" value="{{producto.pk}}">
+</div>
+<div class="col-sm-2">
+  <label>Codigo de barras</label>
+  <input id="barcode" class="form-control" value="{{producto.codigo_barras}}">
+</div>
+<div class="col-sm-1">
+  <label>Precio</label>
+  <input id="precio" class="form-control" value="{{producto.precio}}" readonly>
+</div>
+<div class="col-sm-1">
+  <label>IVA%</label>
+  <input id="iva" class="form-control" value="{{producto.iva}}" readonly>
+  <input id="sumaiva" type="hidden" name="sumaiva">
+</div>
+<div class="col-sm-1">
+  <label>Cantidad</label>
+  <input id="cantidad" class="form-control" value="1">
+</div>
+<div class="col-sm-1" id="">
+  <label>Descnt%</label>
+  <input id="descuento" class="form-control" value="0">
+  <input id="desctotal" type="hidden" name="desctotal">
+</div>
+<div class="col-sm-1" id="">
+  <label>Costo</label>
+  <input id="costo_articulo" class="form-control" readonly>
+  <input id="subcosto" type="hidden" name="subcosto">
+</div>
+<div class="col-sm-1" id="">
+  <br>
+  <button type="button" id="sumar">
+    <span class='glyphicon glyphicon-plus'></span>
+  </button>
+  <button type="button" id="restar">
+    <span class='glyphicon glyphicon-minus'></span>
+  </button>
+  <button type="button" id="setcantidad">
+    establecer
+  </button>
+</div>
+<div class="col-sm-1" id="">
+  <br>
+  <button type="button" id="agnadir" class="btn btn-primary">Añadir</button>
+</div>
