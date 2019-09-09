@@ -20,4 +20,5 @@ urlpatterns=[
 	url(r'^ajax/getdatoscliente/(?P<pk>\d+)/$',views.ajaxdatoscliente,name='ajaxdatoscliente'),
 	url(r'^ajax/getdatosproducto/(?P<pk>\d+)/$',views.ajaxdatosproducto,name='ajaxdatosproducto'),
 	url(r'^compra/(?P<pk>\d+)/$',views.compra,name='compra'),
+	url(r'^hacercompra/$',views.hacercompra,name='hacercompra'),
 	]

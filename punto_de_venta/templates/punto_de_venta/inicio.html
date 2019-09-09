@@ -79,29 +79,21 @@ function calcularcosto(){
   $('#sumaiva').val(ttl*$('#iva').val()/100);
   $('#desctotal').val(ttl*$('#descuento').val()/100);
   $('#subcosto').val(ttl);
-  console.log("--------valores calcularcosto");
-  console.log($('#costo_articulo').val());
-  console.log($('#sumaiva').val());
-  console.log($('#desctotal').val());
-  console.log($('#subcosto').val());
 }
 
 function makeclickdelete(clave){
-  console.log("-----makeclickdelete")
   var idbtn="#btn_"+clave;
   var id="#"+clave;
-  console.log(idbtn);
-  console.log(id);
   $(idbtn).click(function(){
-    restartotales(clave);
     $(id).remove();
     delete carrito[clave];
-    console.log(carrito);
+    calculartotales();
   });
 }
 
 function resetproducto(){
   $('#producto').val('');
+  $('#productopk').val('');
   $('#barcode').val('');
   $('#precio').val('');
   $('#iva').val('');
@@ -126,7 +118,6 @@ function agnadiratabla(datos){
   $('#table_body').append(fila);
   makeclickdelete(datos['clave']);
   resetproducto();
-  console.log(carrito);
 }
 
 function makeactions(){
@@ -143,7 +134,7 @@ function makeactions(){
   });
   $('#agnadir').click(function(){
     calcularcosto();
-    if ($('#cliente').val() != ''){
+    if ($('#cliente').val() != '' && $('#producto').val()!=''){
       var compra=$('#clientepk').val()+"_"+$('#productopk').val();
       $('#cliente').change(function(){
         alert("Cambiaste el cliente, se recargara la pagina");
@@ -164,42 +155,94 @@ function makeactions(){
       };
       carrito[compra]=datos;
       agnadiratabla(datos);
-      sumartotales(compra);
+      calculartotales();
+    }
+    else if ($('#cliente').val()==''){
+      alert("No hay cliente seleccionado");
     }
     else{
-      alert("No hay cliente seleccionado");
+      alert("No hay producto seleccionado");
     }
   });
 }
 
-function sumartotales(compra){
-  sumasubtotal=sumasubtotal+carrito[compra]['subtotal'];
-  sumaivatotal=sumaivatotal+carrito[compra]['sumaiva'];
-  sumadescuento=sumadescuento+carrito[compra]['desctotal'];
-  sumatotal=sumatotal+carrito[compra]['costo'];
-  $('#subtotal').val(sumasubtotal);
-  $('#ivatotal').val(sumaivatotal);
-  $('#descuentototal').val(sumadescuento);
-  $('#total').val(sumatotal);
-
+function calculartotales(){
+  var sub=0;
+  var ivattl=0;
+  var descnt=0;
+  var ttl=0;
+  for (compra in carrito){
+    sub=sub+parseFloat(carrito[compra]['subcosto']);
+    ivattl=ivattl+parseFloat(carrito[compra]['sumaiva']);
+    descnt=descnt+parseFloat(carrito[compra]['desctotal']);
+    ttl=ttl+parseFloat(carrito[compra]['costo']);
+  }
+  $('#subtotal').val(sub);
+  $('#ivatotal').val(ivattl);
+  $('#descuentototal').val(descnt);
+  $('#total').val(ttl);
 }
 
-function restartotales(compra){
-  sumasubtotal=sumasubtotal-carrito[compra]['subtotal'];
-  sumaivatotal=sumaivatotal-carrito[compra]['sumaiva'];
-  sumadescuento=sumadescuento-carrito[compra]['desctotal'];
-  sumatotal=sumatotal-carrito[compra]['costo'];
-  $('#subtotal').val(sumasubtotal);
-  $('#ivatotal').val(sumaivatotal);
-  $('#descuentototal').val(sumadescuento);
-  $('#total').val(sumatotal);
+function makecompra(){
+  inpt="<input name='cliente' value='"+$('#clientepk').val()+"'>";
+  $('#submit_form').append(inpt);
+  num=parseFloat($('#total').val());
+  inpt="<input name='total' value='"+num.toFixed(2)+"'>";
+  $('#submit_form').append(inpt);
+  inpt="<input name='forma_pago' value='"+$('#forma_dialog').val()+"'>";
+  $('#submit_form').append(inpt);
+  num=parseFloat($('#monto_dialog').val());
+  inpt="<input name='monto' value='"+num.toFixed(2)+"'>";
+  $('#submit_form').append(inpt);
+  num=parseFloat($('#cambio_dialog').val());
+  inpt="<input name='cambio' value='"+num.toFixed(2)+"'>";
+  $('#submit_form').append(inpt);
+  inpt="<input name='vendedor' value='{{user.pk}}'>";
+  $('#submit_form').append(inpt);
+  num=parseFloat($('#ivatotal').val());
+  inpt="<input name='iva_total' value='"+num.toFixed(2)+"'>";
+  $('#submit_form').append(inpt);
+  num=parseFloat($('#subtotal').val());
+  inpt="<input name='subtotal' value='"+num.toFixed(2)+"'>";
+  $('#submit_form').append(inpt);
 
+  $('#submit_form').submit();
 }
 
 $(document).ready(function(){
+  var dialog, form;
   makeautocomplete('#cliente','cliente','#clientepk',clientestags,'#datos_cliente',0);
   makeautocomplete('#producto','producto','#productopk',productostags,'#datos_producto',1);
   makeautocomplete('#barcode','codigobarras','#productopk',codigobarrastags,'#datos_producto',1);
+  var dialog, form;
+  dialog=$('#dialogo').dialog({
+    autoOpen: false,
+    modal: true,
+    buttons: {
+      Confirmar: makecompra,
+      Cancelar: function(){
+        dialog.dialog("close");
+      }
+    },
+    close: function(){
+
+    }
+  });
+
+  $('#comprar').click(function(){
+    dialog.dialog("open");
+    $('#total_dialog').val($('#total').val());
+  });
+  $('#monto_dialog').change(function(){
+    $('#cambio_dialog').val($('#monto_dialog').val() - $('#total_dialog').val());
+  });
+  $('#forma_dialog').change(function(){
+    if($('#forma_dialog').val() == "r"){
+      $('#monto_dialog').val($('#total_dialog').val());
+      $('#cambio_dialog').val(0);
+    }
+  });
+
 
 });
 
@@ -232,10 +275,10 @@ $(document).ready(function(){
      </thead>
      <tbody>
        <tr>
-          <td>nombrecliente</td>
-          <td>rfccliente</td>
-          <td>direccioncliente</td>
-          <td>telefonocliente</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
         </tr>
       </tbody>
     </table>
@@ -264,6 +307,7 @@ $(document).ready(function(){
     <div class="col-sm-1" id="">
       <label>Cantidad</label>
       <input id="cantidad" class="form-control">
+      <input id="medida" type="hidden" name="medida">
     </div>
     <div class="col-sm-1" id="">
       <label>Descnt%</label>
@@ -313,15 +357,40 @@ $(document).ready(function(){
     </table>
   </div>
   <div class="row">
-    <div class="col-sm-8">
+    <div class="col-sm-7">
     </div>
-    <div class="col-sm-4">
-    <div class="float-right">
+    <div class="col-sm-2">
+        <div id="dialogo" title="Resumen de compra">
+          <form>
+            <label>Total a pagar</label>
+            <input id="total_dialog" name="total" class="form-control" readonly>
+            <label>Forma de pago</label>
+            <select id="forma_dialog" name="forma_pago" class="form-control">
+              <option value='e'>Efectivo</option>
+              <option value='r'>Credito</option>
+              <option value='c'>Cupon</option>
+            </select>
+            <label>Monto</label>
+            <input id="monto_dialog" name="monto" class="form-control">
+            <label>Cambio</label>
+            <input id="cambio_dialog" name="cambio" class="form-control">
+          </form>
+
+          <!--FORMA PARA SUBMIT-->
+          <form method='POST' action="{%url 'hacercompra'%}" id="submit_form">{% csrf_token %}
+          </form>
+
+        </div>
+        <button id="comprar" type="button" class="btn btn-success">Comprar</button>
+    </div>
+    <div class="col-sm-3 float-right">
       <table class="table" border=1>
-        <tr>
-          <th scope="col"><small>subtotal</small></th>
-          <td><small><input id="subtotal" class="form-control" readonly></small></td>
-        </tr>
+        <thead>
+          <tr>
+            <th scope="col"><small>subtotal</small></th>
+            <td><small><input id="subtotal" class="form-control" readonly></small></td>
+          </tr>
+        </thead>
         <tr>
           <th scope="col"><small>Iva</small></th>
           <td><small><input id="ivatotal" class="form-control" readonly></small></td>
@@ -336,10 +405,9 @@ $(document).ready(function(){
         </tr>
       </table>
     </div>
-    </div>
   </div>
-</div><!--FIN Container-->
 
+</div><!--FIN Container-->
 
 </body>
 {%endblock%}

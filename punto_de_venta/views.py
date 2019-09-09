@@ -163,3 +163,16 @@ def ajaxdatosproducto(request,pk):
 	producto=Productos.objects.get(pk=pk)
 	preciopublico=producto.precio*(producto.iva/100 +1)
 	return render(request,'punto_de_venta/loaddatosproducto.html',{'producto':producto,'preciopublico':preciopublico})
+
+def hacercompra(request):
+	print request.POST
+	ventaform=VentaForm(request.POST);
+	print ventaform
+	print request.POST.get('forma_pago')
+	venta=ventaform.save(commit=False)
+	venta.forma_pago=request.POST.get('forma_pago')
+	if ventaform.is_valid():
+		print "is valid"
+	else:
+		print "not valid"
+	return render(request,'punto_de_venta/inicio.html',{})
