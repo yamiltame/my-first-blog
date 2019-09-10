@@ -85,7 +85,7 @@ class DepartamentoForm(forms.ModelForm):
 class DetalleVentaForm(forms.ModelForm):
 	class Meta:
 		model=Detalle_Venta
-		exclude=[]
+		exclude=['venta']
 
 class VentaForm(forms.ModelForm):
 	class Meta:

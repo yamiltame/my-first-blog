@@ -110,7 +110,12 @@ function agnadiratabla(datos){
   fila="<tr id='"+datos['clave']+"'><td><button type='buton' class='btn btn-danger' id='btn_"+datos['clave']+"'>Quitar</button></td>";
   for(c in camposdatos){
     var llave=camposdatos[c];
+    if(llave=='producto'){
+      fila=fila+"<td>"+$('#producto').val()+"</td>";
+    }
+    else{
     fila=fila+"<td>"+datos[llave]+"</td>";
+    }
   }
   fila=fila+"</tr>";
   idfila="#"+datos['clave'];
@@ -126,15 +131,30 @@ function makeactions(){
     calcularcosto();
   });
   $('#restar').click(function(){
-    $('#cantidad').val(parseInt($('#cantidad').val())-1);
-    calcularcosto();
+    if($('#cantidad').val() > 1){
+      $('#cantidad').val(parseInt($('#cantidad').val())-1);
+      calcularcosto();
+    }
   });
-  $('#setcantidad').click(function(){
-    calcularcosto();
+  $('#cantidad').change(function(){
+    if (parseFloat($('#cantidad').val()) <= 0){
+      alert("la cantidad debe ser positiva");
+    }
+    else{
+      calcularcosto();
+    }
+  });
+  $('#descuento').change(function(){
+    if (parseFloat($('#descuento').val()) < 0 || parseFloat($('#descuento').val())>100){
+      alert("el descuento debe ser entre 0 y 100");
+    }
+    else{
+      calcularcosto();
+    }
   });
   $('#agnadir').click(function(){
     calcularcosto();
-    if ($('#cliente').val() != '' && $('#producto').val()!=''){
+    if ($('#cliente').val() != '' && $('#producto').val()!='' && (parseFloat($('#cantidad').val()) > 0) && (parseFloat($('#descuento').val()) >= 0 && parseFloat($('#descuento').val())<=100)){
       var compra=$('#clientepk').val()+"_"+$('#productopk').val();
       $('#cliente').change(function(){
         alert("Cambiaste el cliente, se recargara la pagina");
@@ -142,15 +162,15 @@ function makeactions(){
       });
       var datos={
         'clave': compra,
-        'producto': $('#producto').val(),
+        'producto': $('#productopk').val(),
         'barcode': $('#barcode').val(),
         'precio': $('#precio').val(),
-        'iva': $('#iva').val(),
+        'iva': $('#sumaiva').val(),
         'cantidad': $('#cantidad').val(),
-        'descuento': $('#descuento').val(),
+        'porcentaje_descuento': $('#descuento').val(),
         'costo': $('#costo_articulo').val(),
         'sumaiva':$('#sumaiva').val(),
-        'desctotal':$('#desctotal').val(),
+        'descuento':$('#desctotal').val(),
         'subcosto':$('#subcosto').val(),
       };
       carrito[compra]=datos;
@@ -160,8 +180,14 @@ function makeactions(){
     else if ($('#cliente').val()==''){
       alert("No hay cliente seleccionado");
     }
-    else{
-      alert("No hay producto seleccionado");
+    else if ((parseFloat($('#descuento').val()) < 0 || parseFloat($('#descuento').val())>100)){
+      alert("Descuento inválido");
+    }
+    else if (parseFloat($('#cantidad').val()) <= 0){
+      alert("cantidad inválida");
+    }
+    else if ($('#producto').val()==''){
+      alert("no hay producto");
     }
   });
 }
@@ -174,7 +200,7 @@ function calculartotales(){
   for (compra in carrito){
     sub=sub+parseFloat(carrito[compra]['subcosto']);
     ivattl=ivattl+parseFloat(carrito[compra]['sumaiva']);
-    descnt=descnt+parseFloat(carrito[compra]['desctotal']);
+    descnt=descnt+parseFloat(carrito[compra]['descuento']);
     ttl=ttl+parseFloat(carrito[compra]['costo']);
   }
   $('#subtotal').val(sub);
@@ -184,29 +210,33 @@ function calculartotales(){
 }
 
 function makecompra(){
-  inpt="<input name='cliente' value='"+$('#clientepk').val()+"'>";
-  $('#submit_form').append(inpt);
-  num=parseFloat($('#total').val());
-  inpt="<input name='total' value='"+num.toFixed(2)+"'>";
-  $('#submit_form').append(inpt);
-  inpt="<input name='forma_pago' value='"+$('#forma_dialog').val()+"'>";
-  $('#submit_form').append(inpt);
-  num=parseFloat($('#monto_dialog').val());
-  inpt="<input name='monto' value='"+num.toFixed(2)+"'>";
-  $('#submit_form').append(inpt);
-  num=parseFloat($('#cambio_dialog').val());
-  inpt="<input name='cambio' value='"+num.toFixed(2)+"'>";
-  $('#submit_form').append(inpt);
-  inpt="<input name='vendedor' value='{{user.pk}}'>";
-  $('#submit_form').append(inpt);
-  num=parseFloat($('#ivatotal').val());
-  inpt="<input name='iva_total' value='"+num.toFixed(2)+"'>";
-  $('#submit_form').append(inpt);
-  num=parseFloat($('#subtotal').val());
-  inpt="<input name='subtotal' value='"+num.toFixed(2)+"'>";
-  $('#submit_form').append(inpt);
-
-  $('#submit_form').submit();
+  if($('#monto_dialog').val() != '' && parseFloat($('#monto_dialog').val()) >= parseFloat($('#total_dialog').val())){
+    $.ajax({
+      url: "/punto/hacercompra/",
+      dataType:'html',
+      method: 'POST',
+      data:{
+        'cliente': $('#clientepk').val(),
+        'total': parseFloat($('#id_rfc').val()).toFixed(2),
+        'forma_pago': $('#forma_dialog').val(),
+        'monto': parseFloat($('#monto_dialog').val()).toFixed(2),
+        'cambio': parseFloat($('#cambio_dialog').val()).toFixed(2),
+        'vendedor': "{{user.pk}}",
+        'iva_total': parseFloat($('#ivatotal').val()).toFixed(2),
+        'subtotal': parseFloat($('#subtotal').val()).toFixed(2),
+        'total': parseFloat($('#total').val()).toFixed(2),
+        'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val(),
+        'detalles': JSON.stringify(carrito)
+      },
+      success: function(data){
+        alert("Comprando");
+        $("html").html(data);
+      }
+    });
+  }
+  else{
+    alert("monto inválido");
+  }
 }
 
 $(document).ready(function(){
@@ -214,36 +244,28 @@ $(document).ready(function(){
   makeautocomplete('#cliente','cliente','#clientepk',clientestags,'#datos_cliente',0);
   makeautocomplete('#producto','producto','#productopk',productostags,'#datos_producto',1);
   makeautocomplete('#barcode','codigobarras','#productopk',codigobarrastags,'#datos_producto',1);
-  var dialog, form;
-  dialog=$('#dialogo').dialog({
-    autoOpen: false,
-    modal: true,
-    buttons: {
-      Confirmar: makecompra,
-      Cancelar: function(){
-        dialog.dialog("close");
-      }
-    },
-    close: function(){
-
-    }
-  });
-
-  $('#comprar').click(function(){
-    dialog.dialog("open");
+  $('#dialogomodal').on('show.bs.modal', function(event){
+    console.log("---------monto--------");
+    console.log($('#monto_dialog').val());
+    var button = $(event.relatedTarget)
     $('#total_dialog').val($('#total').val());
-  });
-  $('#monto_dialog').change(function(){
-    $('#cambio_dialog').val($('#monto_dialog').val() - $('#total_dialog').val());
-  });
-  $('#forma_dialog').change(function(){
-    if($('#forma_dialog').val() == "r"){
-      $('#monto_dialog').val($('#total_dialog').val());
-      $('#cambio_dialog').val(0);
-    }
-  });
 
-
+    $('#forma_dialog').change(function(){
+      if($('#forma_dialog').val() == "r"){
+        $('#monto_dialog').val($('#total_dialog').val());
+        $('#cambio_dialog').val(0);
+      }
+    });
+    $('#buy').click(makecompra);
+    $('#monto_dialog').change(function(){
+      if(parseFloat($('#monto_dialog').val()) >= parseFloat($('#total_dialog').val())){
+        $('#cambio_dialog').val($('#monto_dialog').val() - $('#total_dialog').val());
+      }
+      else if($('#monto_dialog').val() != ''){
+        alert("monto inválido");
+      }
+    });
+  });
 });
 
 </script>
@@ -300,7 +322,7 @@ $(document).ready(function(){
       <input id="precio" class="form-control" readonly>
     </div>
     <div class="col-sm-1" id="">
-      <label>IVA%</label>
+      <label>IVA</label>
       <input id="iva" class="form-control" readonly>
       <input id="sumaiva" type="hidden" name="sumaiva">
     </div>
@@ -327,9 +349,6 @@ $(document).ready(function(){
       <button type="button" id="restar">
         <span class='glyphicon glyphicon-minus'></span>
       </button>
-      <button type="button" id="setcantidad">
-        establecer
-      </button>
     </div>
     <div class="col-sm-1">
       <br>
@@ -348,7 +367,7 @@ $(document).ready(function(){
          <th scope="col">Precio</th>
          <th scope="col">IVA%</th>
          <th scope="col">Cantidad</th>
-         <th scope="col">Descuento%</th>
+         <th scope="col">Descuento</th>
          <th scope="col">Importe</th>
        </tr>
       </thead>
@@ -356,34 +375,53 @@ $(document).ready(function(){
       </tbody>
     </table>
   </div>
+
+  <!--DIVISIÓN PARA CAPTURAR VENTA-->
+  <div id="venta">
+  </div>
+ 
   <div class="row">
-    <div class="col-sm-7">
+    <div class="col-sm-8">
     </div>
-    <div class="col-sm-2">
-        <div id="dialogo" title="Resumen de compra">
-          <form>
-            <label>Total a pagar</label>
-            <input id="total_dialog" name="total" class="form-control" readonly>
-            <label>Forma de pago</label>
-            <select id="forma_dialog" name="forma_pago" class="form-control">
-              <option value='e'>Efectivo</option>
-              <option value='r'>Credito</option>
-              <option value='c'>Cupon</option>
-            </select>
-            <label>Monto</label>
-            <input id="monto_dialog" name="monto" class="form-control">
-            <label>Cambio</label>
-            <input id="cambio_dialog" name="cambio" class="form-control">
-          </form>
-
-          <!--FORMA PARA SUBMIT-->
-          <form method='POST' action="{%url 'hacercompra'%}" id="submit_form">{% csrf_token %}
-          </form>
-
+    <div class="col-sm-1">
+        <div class="modal fade" id="dialogomodal" tabindex="-1" role="dialog" aria-labelledby="modallabel">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="modallabel">Resumen de compra</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <form>
+                  <div class="form-group">
+                    {%csrf_token%}
+                    <label>Total a pagar</label>
+                    <input id="total_dialog" name="total" class="form-control" readonly>
+                    <label>Forma de pago</label>
+                    <select id="forma_dialog" name="forma_pago" class="form-control">
+                      <option value='e'>Efectivo</option>
+                      <option value='r'>Credito</option>
+                      <option value='c'>Cupon</option>
+                    </select>
+                    <label>Monto</label>
+                    <input id="monto_dialog" name="monto" class="form-control">
+                    <label>Cambio</label>
+                    <input id="cambio_dialog" name="cambio" class="form-control" readonly>
+                  </div>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                <button id="buy" type="button" class="btn btn-success">Comprar</button>
+              </div>
+            </div>
+          </div>
         </div>
-        <button id="comprar" type="button" class="btn btn-success">Comprar</button>
     </div>
     <div class="col-sm-3 float-right">
+      <div class="row">
       <table class="table" border=1>
         <thead>
           <tr>
@@ -404,6 +442,10 @@ $(document).ready(function(){
           <td><small><input id="total" class="form-control" readonly></small></td>
         </tr>
       </table>
+      </div>
+      <div class="row">
+        <button id="comprar" type="button" class="btn btn-success" data-toggle="modal" data-target="#dialogomodal">Comprar</button>
+      </div>
     </div>
   </div>
 

@@ -7,6 +7,7 @@ from .models import *
 from forms import *
 from .tools import *
 from django.http import HttpResponse
+import json
 
 def Inicio(request):
 	productos=get_catalogo('producto')
@@ -165,14 +166,17 @@ def ajaxdatosproducto(request,pk):
 	return render(request,'punto_de_venta/loaddatosproducto.html',{'producto':producto,'preciopublico':preciopublico})
 
 def hacercompra(request):
-	print request.POST
 	ventaform=VentaForm(request.POST);
 	print ventaform
-	print request.POST.get('forma_pago')
-	venta=ventaform.save(commit=False)
-	venta.forma_pago=request.POST.get('forma_pago')
 	if ventaform.is_valid():
-		print "is valid"
-	else:
-		print "not valid"
-	return render(request,'punto_de_venta/inicio.html',{})
+		venta=ventaform.save()
+	detalles = json.loads(request.POST['detalles'])
+	for llave,valor in detalles.items():
+		sale=DetalleVentaForm(valor)
+		if sale.is_valid():
+			detalleventa=sale.save(commit=False)
+			detalleventa.venta=venta
+			detalleventa.save()
+	#cliente=Clientes.objects.get(pk=venta.cliente.pk)
+	Detalles=Detalle_Venta.objects.filter(venta=venta)
+	return render(request,"punto_de_venta/detalleventa.html",{'detalles':Detalles,'venta':venta})

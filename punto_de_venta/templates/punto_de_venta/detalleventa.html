@@ -1,0 +1,68 @@
+{% extends 'punto_de_venta/base.html' %}
+
+{%block content_js%}
+{%endblock%}
+
+{%block content%}
+<h1> Compra de {{venta.cliente}}</h1>
+<table class="table">
+	<thead>
+		<tr>
+			<th scope="col">Fecha</th>
+			<th scope="col">Iva total</th>
+			<th scope="col">Subtotal</th>
+			<th scope="col">Total</th>
+			<th scope="col">Forma de pago</th>
+			<th scope="col">Monto</th>
+			<th scope="col">Cambio</th>
+			<th scope="col">Vendedor</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>{{venta.fecha}}</td>
+			<td>{{venta.iva_total}}</td>
+			<td>{{venta.subtotal}}</td>
+			<td>{{venta.total}}</td>
+			<td>
+				{%if venta.forma_pago == 'r' %}
+					crédito
+				{%endif%}
+				{%if venta.forma_pago == 'e' %}
+					efectivo
+				{%endif%}
+				{%if venta.forma_pago == 'c' %}
+					cupón
+				{%endif%}		
+			</td>
+			<td>{{venta.monto}}</td>
+			<td>{{venta.cambio}}</td>
+			<td>{{venta.vendedor}}</td>
+		</tr>
+	</tbody>
+</table>
+
+<h1> Detalles </h1>
+<table class="table">
+	<thead>
+		<tr>
+			<th scope="col">Producto</th>
+			<th scope="col">Cantidad</th>
+			<th scope="col">Porcentaje descuento</th>
+			<th scope="col">Descuento</th>
+			<th scope="col">Iva</th>
+		</tr>
+	</thead>
+	<tbody>
+		{%for detalle in detalles%}
+			<tr>
+				<td>{{detalle.producto}}</td>
+				<td>{{detalle.cantidad}}</td>
+				<td>{{detalle.porcentaje_descuento}}</td>
+				<td>{{detalle.descuento}}</td>
+				<td>{{detalle.iva}}</td>
+			</tr>
+		{%endfor%}
+	</tbody>
+</table>
+{%endblock%}

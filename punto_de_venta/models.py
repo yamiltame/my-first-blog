@@ -1,6 +1,6 @@
 #-*- coding: utf-8 -*-
 from __future__ import unicode_literals
-
+from .validators import *
 from django.db import models
 from django.utils import timezone
 from opciones import *
@@ -78,8 +78,8 @@ class Productos(models.Model):
 	nombre=models.CharField(max_length=100)
 	iva=models.IntegerField(choices=opcion_ivas)
 	marca=models.ForeignKey(Marca)
-	precio=models.DecimalField(max_digits=8,decimal_places=2)
-	existencia=models.DecimalField(max_digits=8,decimal_places=2)
+	precio=models.DecimalField(max_digits=8,decimal_places=2,validators=[validate_positive])
+	existencia=models.DecimalField(max_digits=8,decimal_places=2,validators=[validate_positive])
 	proveedores=models.ManyToManyField(Proveedores)
 	medida=models.ForeignKey(Medidas)
 	dpto=models.ManyToManyField(Departamento)
@@ -89,13 +89,13 @@ class Productos(models.Model):
 class Ventas(models.Model):
 	fecha=models.DateTimeField(auto_now_add=True)
 	cliente=models.ForeignKey(Clientes)
-	total=models.DecimalField(max_digits=6,decimal_places=2)
+	total=models.DecimalField(max_digits=6,decimal_places=2,validators=[validate_positive])
 	forma_pago=models.CharField(max_length=1,choices=opcion_forma_pago)
-	monto=models.DecimalField(max_digits=6,decimal_places=2)
-	cambio=models.DecimalField(max_digits=6,decimal_places=2)
+	monto=models.DecimalField(max_digits=6,decimal_places=2,validators=[validate_positive])
+	cambio=models.DecimalField(max_digits=6,decimal_places=2,validators=[validate_positive])
 	vendedor=models.ForeignKey('auth.User')
-	iva_total=models.DecimalField(max_digits=6,decimal_places=2)
-	subtotal=models.DecimalField(max_digits=6,decimal_places=2)
+	iva_total=models.DecimalField(max_digits=6,decimal_places=2,validators=[validate_positive])
+	subtotal=models.DecimalField(max_digits=6,decimal_places=2,validators=[validate_positive])
 	
 class Cajas(models.Model):
 	descripcion=models.CharField(max_length=100)
@@ -111,8 +111,8 @@ class Caja_operacion(models.Model):
 
 class Detalle_Venta(models.Model):
 	producto=models.ForeignKey(Productos)
-	cantidad=models.DecimalField(max_digits=6,decimal_places=2)
-	porcentaje_descuento=models.IntegerField(default=0)
-	descuento=models.DecimalField(max_digits=6,decimal_places=2)
+	cantidad=models.DecimalField(max_digits=6,decimal_places=2,validators=[validate_positive])
+	porcentaje_descuento=models.IntegerField(default=0,validators=[validate_porcentaje])
+	descuento=models.DecimalField(max_digits=6,decimal_places=2,validators=[validate_porcentaje])
 	venta=models.ForeignKey(Ventas)
-	iva=models.DecimalField(max_digits=6,decimal_places=2)
+	iva=models.DecimalField(max_digits=6,decimal_places=2,validators=[validate_porcentaje])

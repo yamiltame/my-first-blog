@@ -11,4 +11,6 @@ admin.site.register(Contacto)
 admin.site.register(Ubicacion)
 admin.site.register(Clientes)
 admin.site.register(Productos)
+admin.site.register(Ventas)
+admin.site.register(Detalle_Venta)
 # Register your models here.
