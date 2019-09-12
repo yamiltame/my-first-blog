@@ -15,6 +15,7 @@
   </head>
   
   <body>
+{%if user.is_authenticated%}
     <nav class="navbar navbar-default">
       <div class="container-fluid">
         <div class="navbar-header">
@@ -31,6 +32,8 @@
           <a class="navbar-brand" href="{%url 'catalogo' tipo='marca'%}">Marcas</a>
           <a class="navbar-brand" href="{%url 'catalogo' tipo='departamento'%}">Departamentos</a>
           <a class="navbar-brand" href="{%url 'catalogo' tipo='medida'%}">Unidades de medida</a>
+          <a class="navbar-brand" href="{%url 'reportes'%}">Reportes</a>
+		  <a class="navbar-brand" href="{% url 'makelogout' %}">Logout</a>
         </div>
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <form class="navbar-form navbar-left">
@@ -42,8 +45,11 @@
         </div><!-- /.navbar-collapse -->
       </div><!-- /.container-fluid -->
     </nav>
-  <a href="/blog">ir a blog</a>
   {% block content %}
   {% endblock %}
+{%else%}
+<p><h1>No iniciaste sesión!!</h1></p>
+<a href="{%url 'login'%}">Login</a>
+{%endif%}
   </body>
 </html>

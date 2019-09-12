@@ -153,7 +153,7 @@
 	            	{{form.sku}}
 		        </div>
 		        <div class="col-sm-4">
-	            	<label>Nombre</label>
+	            	<label>{{form.nombre.label}}</label>
 	            	{{form.nombre}}
 		        </div>
 		    </div>
@@ -165,10 +165,12 @@
 		    	<div class="col-sm-4">
 		    		<label>Precio</label>
 		    		{{form.precio}}
+		    		{{form.precio.errors}}
 		    	</div>
 		    	<div class="col-sm-4">
 		    		<label>Existencia</label>
 		    		{{form.existencia}}
+		    		{{form.existencia.errors}}
 		    	</div>
 		    </div>
 		    <div class="row">

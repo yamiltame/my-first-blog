@@ -1,0 +1,7 @@
+
+<h1>Selecciona la caja que deseas abrir</h1>
+<form class="form-group" method='POST' >
+    {% csrf_token %}
+    {{form.as_p}}
+    <button type="submit">Elegir</button>
+</form>

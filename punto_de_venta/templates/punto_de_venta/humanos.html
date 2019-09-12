@@ -4,6 +4,16 @@
 <script type="text/javascript">
     $(function(){
         $("input").addClass('form-control');
+        $('#id_rfc').change(function(){
+          console.log($('#id_rfc').val().length);
+          if ($('#id_rfc').val().length == 12){
+            $('#id_giro').required=true;
+          }
+          else if($('#id_rfc').val().length == 13){
+            $('#id_giro').removeAttr('required');
+          }
+        });
+
     });  
 </script>
 
@@ -25,6 +35,7 @@
         <div class="col-sm-4">
           <label>{{field.name}}</label>
           {{field}}
+          {{field.errors}}
         </div>
       {%endfor%}
     </div>
@@ -50,10 +61,12 @@
           <div class="col-sm-3">
             No. ext
             {{ubicacion.no_ext}}
+            {{ubicacion.no_ext.errors}}
           </div>
           <div class="col-sm-3">
             No. int
             {{ubicacion.no_int}}
+            {{ubicacion.no_int.errors}}
           </div>
         </div>
         <div class="row">
@@ -72,6 +85,13 @@
               Municipio 
               {{ubicacion.municipio}}
             </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-6">
+            Código postal<br>
+            {{ubicacion.codigo_postal}}
+            {{ubicacion.codigo_postal.errors}}
           </div>
         </div>
       </div>

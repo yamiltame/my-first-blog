@@ -13,4 +13,6 @@ admin.site.register(Clientes)
 admin.site.register(Productos)
 admin.site.register(Ventas)
 admin.site.register(Detalle_Venta)
+admin.site.register(Caja_operacion)
+admin.site.register(Cajas)
 # Register your models here.

@@ -14,3 +14,7 @@ def validate_porcentaje(valor):
 			_('%(valor)s debe ser porcentaje [0,100]'),
 			params={'valor':valor},
 		)
+
+def validate_digit(valor):
+	if not valor.isdigit():
+		raise ValidationError(_('deben ser digitos...'))

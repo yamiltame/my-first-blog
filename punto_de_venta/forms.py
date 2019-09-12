@@ -1,5 +1,9 @@
 from django import forms
 from .models import *
+from .validators import *
+from django.core.exceptions import ValidationError
+from django.utils.translation import ugettext_lazy as _
+from django.core.validators import RegexValidator
 
 class MarcaForm(forms.ModelForm):
 
@@ -13,11 +17,9 @@ class MarcaForm(forms.ModelForm):
 		exclude=[]
 
 class UbicacionForm(forms.ModelForm):
-	class Meta:
-		model= Ubicacion
-		exclude=[]
 	def __init__(self,*args,**kwargs):
 		super(UbicacionForm,self).__init__(*args,**kwargs)
+		self.fields['codigo_postal'].validators=[RegexValidator(r'^\d{5}$',message='Codigo postal invalido')]
 		self.fields['municipio'].queryset=Municipio.objects.none()
 		if 'estado' in self.data:
 			try:
@@ -28,6 +30,11 @@ class UbicacionForm(forms.ModelForm):
 		elif self.instance.pk:
 			self.fields['municipio'].queryset=self.instance.estado.municipio_set.order_by('nombre')
 
+	class Meta:
+		model= Ubicacion
+		exclude=[]
+	
+
 
 class ContactoForm(forms.ModelForm):
 	class Meta:
@@ -35,9 +42,40 @@ class ContactoForm(forms.ModelForm):
 		exclude=[]
 
 class ClienteForm(forms.ModelForm):
+
+	giro=forms.CharField( required=False, label="Giro.", max_length=100)
+
+	def __init__(self,*args,**kwargs):
+		super(ClienteForm,self).__init__(*args,**kwargs)
+		self.fields['rfc']=forms.CharField( required=True, label="Registro tributario", max_length=13, min_length=12)
+		if args and len(args[0]['rfc']) == 12: 
+			self.fields['giro'].required=True
+			self.fields['rfc'].validators=[self.valida_rfc_moral]
+		elif args:
+			self.fields['rfc'].validators=[self.valida_rfc_fisica]
+	
+
+	def valida_rfc_moral(self,valor):
+		chk=True
+		for l in valor[9:12]:
+			chk= chk and (l.isalpha() or l.isdigit())
+		if not (valor[0:3].isalpha() and valor[3:9].isdigit() and chk):
+			raise ValidationError(
+				_('RFC de persona moral deben ser 3 letras, 6 numeros y 3 alfanumericos'),
+			)
+
+	def valida_rfc_fisica(self,valor):
+		chk=True
+		for l in valor[10:13]:
+			chk= chk and (l.isalpha() or l.isdigit())
+		if not (valor[0:4].isalpha() and valor[4:10].isdigit() and chk):
+			raise ValidationError(
+				_('RFC de persona fisica deben ser 4 letras, 6 numeros y 3 alfanumericos'),
+			)
 	class Meta:
 		model= Clientes
 		exclude=['ubicacion','contacto']
+
 
 class ProductoForm(forms.ModelForm):
 	class Meta:
@@ -68,6 +106,17 @@ class Productoproveedorform(forms.ModelForm):
 		fields=['proveedores']
 
 class ProveedorForm(forms.ModelForm):
+
+	giro=forms.CharField( required=False, label="Giro.", max_length=100)
+
+	def __init__(self,*args,**kwargs):
+		super(ProveedorForm,self).__init__(*args,**kwargs)
+		self.fields['rfc']=forms.CharField( required=True, label="Registro tributario", max_length=13, min_length=12)
+		if args and len(args[0]['rfc']) == 12: 
+			self.fields['giro'].required=True
+			self.fields['rfc'].validators=[RegexValidator(r'^[A-Z]{3}\d{6}[\dA-Z]{3}$',message='Rfc moral invalido')]
+		elif args:
+			self.fields['rfc'].validators=[RegexValidator(r'^[A-Z]{4}\d{6}[\dA-Z]{3}$',message='Rfc fisico invalido')]
 	class Meta:
 		model= Proveedores
 		exclude=['ubicacion','contacto']
@@ -91,3 +140,13 @@ class VentaForm(forms.ModelForm):
 	class Meta:
 		model=Ventas
 		exclude=[]
+
+class CajaOperacionForm(forms.ModelForm):
+	class Meta:
+		model=Caja_operacion
+		exclude=[]
+
+class CajaOperacionCajaForm(forms.ModelForm):
+	class Meta:
+		model=Caja_operacion
+		fields=['caja']

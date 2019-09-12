@@ -1,5 +1,5 @@
 
-from django.conf.urls import url
+from django.conf.urls import url, include
 from . import views
 
 urlpatterns=[
@@ -19,6 +19,9 @@ urlpatterns=[
 	url(r'^ajax/regreso/(?P<tipo>\w+)/$',views.ajaxregreso,name='ajaxregreso'),
 	url(r'^ajax/getdatoscliente/(?P<pk>\d+)/$',views.ajaxdatoscliente,name='ajaxdatoscliente'),
 	url(r'^ajax/getdatosproducto/(?P<pk>\d+)/$',views.ajaxdatosproducto,name='ajaxdatosproducto'),
-	url(r'^compra/(?P<pk>\d+)/$',views.compra,name='compra'),
 	url(r'^hacercompra/$',views.hacercompra,name='hacercompra'),
+	url(r'^registro/$',views.SignUp.as_view(),name='registro'),
+	url(r'^makelogin/$',views.makelogin,name='makelogin'),
+	url(r'^makelogout/$',views.makelogout,name='makelogout'),
+	url(r'^reportes/$',views.reportes,name='reportes'),
 	]

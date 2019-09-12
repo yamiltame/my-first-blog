@@ -22,13 +22,14 @@ class Marca(models.Model):
 	def __str__(self):
 		return self.nombre.encode('utf-8')
 
-class Ubicacion(models.Model):
+class Ubicacion(models.Model): 
 	calle=models.CharField(max_length=100)
-	no_ext=models.CharField(max_length=10)
-	no_int=models.CharField(max_length=10,null=True,blank=True)
+	no_ext=models.CharField(max_length=10,validators=[validate_digit])
+	no_int=models.CharField(max_length=10,null=True,blank=True,validators=[validate_digit])
 	colonia=models.CharField(max_length=100)
 	estado=models.ForeignKey(Estados)
 	municipio=models.ForeignKey(Municipio)
+	codigo_postal=models.CharField(max_length=5,default=00000)
 	def __str__(self):
 		if(self.no_int != None):
 			return (self.calle+" #"+self.no_ext+" int. "+self.no_int+" Col. "+self.colonia+" "+self.municipio.nombre+","+self.estado.nombre).encode('utf-8')
@@ -103,11 +104,15 @@ class Cajas(models.Model):
 		return self.descripcion.encode('utf-8')
 
 class Caja_operacion(models.Model):
+	caja=models.ForeignKey(Cajas)
 	fecha_inicio=models.DateTimeField(auto_now_add=True)
 	vendedor=models.ForeignKey('auth.User')
 	saldo_inicial=models.DecimalField(max_digits=6,decimal_places=2)
 	saldo_final=models.DecimalField(max_digits=6,decimal_places=2)
-	fecha_cierre=models.DateTimeField(auto_now_add=True)
+	fecha_cierre=models.DateTimeField(auto_now_add=False,null=True,blank=True)
+	def __str__(self):
+		fecha_cierre=self.fecha_cierre.strftime('%Y-%m-%d %H:%M')	if (self.fecha_cierre) else 'abierta'
+		return "%s - %s - %s" % (self.caja.descripcion, self.fecha_inicio.strftime('%Y-%m-%d %H:%M'), fecha_cierre)
 
 class Detalle_Venta(models.Model):
 	producto=models.ForeignKey(Productos)

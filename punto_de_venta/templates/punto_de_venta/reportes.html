@@ -1,0 +1,14 @@
+{% extends 'punto_de_venta/base.html' %}
+
+
+{% block content_js %}
+{%endblock%}
+
+
+{%block content%}
+
+{%for op in operaciones%}
+	{{op}}
+{%endfor%}
+
+{%endblock%}

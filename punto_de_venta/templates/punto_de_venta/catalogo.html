@@ -85,7 +85,9 @@
 				{{cliente.contacto}}
 			</div>
 			<div class="col-sm-2">
+				{%if user.is_authenticated%}
 				<a href="{%url 'editarhumano' tipo=tipo pk=cliente.pk%}">Editar___</a><a href="{%url 'eliminar' tipo=tipo pk=cliente.pk%}">___Eliminar</a>
+				{%endif%}
 			</div>
 		</div>
 		{%endfor%}
@@ -113,7 +115,9 @@
 				{{cliente.nombre}}
 			</div>
 			<div class="col-sm-2">
+				{%if user.is_authenticated%}
 				<a href="{%url 'editar' tipo=tipo pk=cliente.pk%}">Editar___</a><a href="{%url 'eliminar' tipo=tipo pk=cliente.pk%}">___Eliminar</a>
+				{%endif%}
 			</div>
 		</div>
 		{%endfor%}
@@ -175,7 +179,9 @@
 				{%endfor%}
 			</div>
 			<div class="col-sm-1">
+				{%if user.is_authenticated%}
 				<a href="{%url 'editar' tipo=tipo pk=cliente.pk%}">Editar___</a><a href="{%url 'eliminar' tipo=tipo pk=cliente.pk%}">___Eliminar</a>
+				{%endif%}
 			</div>
 		</div>
 		{%endfor%}
