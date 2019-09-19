@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django import forms
 from .models import *
 from .validators import *
@@ -139,7 +140,7 @@ class DetalleVentaForm(forms.ModelForm):
 class VentaForm(forms.ModelForm):
 	class Meta:
 		model=Ventas
-		exclude=[]
+		exclude=['caja']
 
 class CajaOperacionForm(forms.ModelForm):
 	class Meta:
@@ -150,3 +151,9 @@ class CajaOperacionCajaForm(forms.ModelForm):
 	class Meta:
 		model=Caja_operacion
 		fields=['caja']
+
+class intervaloform(forms.Form):
+	opciones=[('i','intervalo'),('a','año'),('m','mes'),('d','dia')]
+	visualizacion=forms.ChoiceField(label='Visualizacion',choices=opciones)
+	inicio=forms.DateTimeField(label='Inicio',help_text="YYYY-MM-DD")
+	fin=forms.DateTimeField(label='Fin')

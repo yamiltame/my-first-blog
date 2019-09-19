@@ -1,0 +1,11 @@
+{%for p in operaciones%}
+	<tr>
+		<td>{{p.caja}}</td>
+		<td>{{p.ttl}}</td>
+		{% if tipo == 'i' %}
+			<td> de {{inicio}}  hasta {{fin}}</td>
+		{%else%}
+			<td>{{p.fch}}</td>
+		{%endif%}
+	</tr>
+{%endfor%}

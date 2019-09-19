@@ -97,6 +97,10 @@ class Ventas(models.Model):
 	vendedor=models.ForeignKey('auth.User')
 	iva_total=models.DecimalField(max_digits=6,decimal_places=2,validators=[validate_positive])
 	subtotal=models.DecimalField(max_digits=6,decimal_places=2,validators=[validate_positive])
+	caja=models.ForeignKey('Cajas',default=1)
+	def __str__(self):
+		return (self.vendedor.username+" caja: "+self.caja.descripcion+" "+self.fecha.strftime('%Y-%m-%d')+" "+self.total).encode('utf-8')
+
 	
 class Cajas(models.Model):
 	descripcion=models.CharField(max_length=100)
@@ -121,3 +125,5 @@ class Detalle_Venta(models.Model):
 	descuento=models.DecimalField(max_digits=6,decimal_places=2,validators=[validate_porcentaje])
 	venta=models.ForeignKey(Ventas)
 	iva=models.DecimalField(max_digits=6,decimal_places=2,validators=[validate_porcentaje])
+	def __str__(self):
+		return (self.producto.nombre+" cant: "+self.cantidad).encode('utf-8')

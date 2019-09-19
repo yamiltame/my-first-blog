@@ -5,7 +5,8 @@
 {%if tipo == 'producto'%}
 	<h1>Productos</h1>
     {% if user.is_authenticated %}
-        <a href="{% url 'agregarproducto'%}" class="top-menu"><span class='glyphicon glyphicon-plus'>agregar Producto</span></a>
+        <a href="{% url 'agregarproducto'%}" class="top-menu"><span class='glyphicon glyphicon-plus'>agregar Producto</span></a><br>
+        <a href="{% url 'agregarproductomultiple'%}" class="top-menu"><span class='glyphicon glyphicon-plus'>agregar muchos productos</span></a>
     {% endif %}
 {%endif%}
 

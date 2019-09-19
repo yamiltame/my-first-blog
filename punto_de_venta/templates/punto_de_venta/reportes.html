@@ -2,13 +2,88 @@
 
 
 {% block content_js %}
+<script type="text/javascript">
+    $(function(){
+        $("input").addClass('form-control');
+        $("select").addClass('form-control');
+        $('#id_visualizacion').change(function(){
+        	if ($('#id_visualizacion').val() != "i"){
+	        	$('#iniciofin').hide();
+	        }
+	        else{
+	        	$('#iniciofin').show();
+	        }
+
+        });
+        $('#consultar').click(function(){
+        	$.ajax({
+        		url: "/punto/ajax/datosreporte/",
+        		dataType: 'html',
+        		method: 'POST',
+        		data:{
+        			'tipo': $('#id_visualizacion').val(),
+        			'inicio': $('#id_inicio').val(),
+        			'fin': $('#id_fin').val(),
+        			'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
+        		},
+        		success: function(data){
+        			$('#table_body').html(data);
+        		}
+        	});
+        });
+    });  
+</script>
 {%endblock%}
 
 
 {%block content%}
-
-{%for op in operaciones%}
-	{{op}}
+<from class="form-group">
+	{% csrf_token %}
+	<div class="row">
+		<div class="col-sm-4">
+			<b>{{form.visualizacion.label}}</b>
+			{{form.visualizacion}}
+			{{form.visualizacion.errors}}
+		</div>
+		<div class="col-sm-7">
+			<div id="iniciofin">
+				<div class="col-sm-6">
+					<b>{{form.inicio.label}}</b>
+					{{form.inicio}}
+					{{form.inicio.errors}}
+					{{form.inicio.help_text}}<br>
+				</div>
+				<div class="col-sm-6">
+					<b>{{form.fin.label}}</b>
+					{{form.fin}}
+					{{form.fin.errors}}
+					{{form.inicio.help_text}}<br>
+				</div>
+			</div>
+		</div>
+	</div>
+	<button id='consultar' type="submit">Consultar</button><br>
+</from>
+    <table class="table">
+      <thead>
+       <tr>
+         <th scope="col">Caja</th>
+         <th scope="col">Venta</th>
+         <th scope="col">fecha</th>
+       </tr>
+      </thead>
+      <tbody id="table_body">
+      	{%for p in ops%}
+      		<tr>
+      			<td>{{p.caja}}</td>
+      			<td>{{p.total}}</td>
+      			<td>{{p.fecha}}</td>
+      		</tr>
+      	{%endfor%}
+      </tbody>
+    </table>
+{%for p in ops%}
+	{{p}}
 {%endfor%}
 
 {%endblock%}

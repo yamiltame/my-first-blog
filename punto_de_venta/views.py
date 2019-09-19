@@ -7,6 +7,7 @@ from django.utils import timezone
 from django.views import generic
 from django.urls import reverse_lazy
 from django.shortcuts import render, redirect
+from django.forms import formset_factory
 from .models import *
 from forms import *
 from .tools import *
@@ -47,6 +48,22 @@ def agregarproducto(request):
 	else:
 		form=get_F('producto')
 	return render(request,'punto_de_venta/agregarproducto.html',{'form':form})
+
+@login_required
+def agregarproductomultiple(request):
+	productoformset=formset_factory(ProductoForm, can_delete=True)
+	data = {
+		'form-TOTAL_FORMS': '1',
+		'form-INITIAL_FORMS': '0',
+		'form-MAX_NUM_FORMS': '',
+	}
+	formset=productoformset(data)
+	return render(request,'punto_de_venta/agregarproductomultiple.html',{'formset':formset})
+
+def ajaxmakeformset(request):
+	productoformset=formset_factory(ProductoForm,can_delete=True,extra=1)
+	formset=productoformset(request.POST)
+	return render(request,'punto_de_venta/makeformset.html',{'formset':formset})
 
 @transaction.atomic
 def agregarhumano(request,tipo):
@@ -209,10 +226,14 @@ def makelogout(request):
 
 @transaction.atomic
 def hacercompra(request):
+	caja=Caja_operacion.objects.get(pk=request.session['caja_activa'])
 	ventaform=VentaForm(request.POST);
 	print ventaform
+	print caja.caja
 	if ventaform.is_valid():
-		venta=ventaform.save()
+		venta=ventaform.save(commit=False)
+		venta.caja=caja.caja
+		venta.save()
 	detalles = json.loads(request.POST['detalles'])
 	for llave,valor in detalles.items():
 		sale=DetalleVentaForm(valor)
@@ -221,7 +242,6 @@ def hacercompra(request):
 			detalleventa.venta=venta
 			detalleventa.save()
 
-	caja=Caja_operacion.objects.get(pk=request.session['caja_activa'])
 
 	caja.saldo_final=caja.saldo_final+venta.total
 	caja.save()
@@ -230,6 +250,16 @@ def hacercompra(request):
 	return render(request,"punto_de_venta/detalleventa.html",{'detalles':Detalles,'venta':venta})
 
 def reportes(request):
-	operaciones=Caja_operacion.objects.values('caja').annotate(Sum('saldo_final'))
-	print operaciones
-	return render(request,"punto_de_venta/reportes.html",{'operaciones':operaciones})
+	form=intervaloform()
+	return render(request,"punto_de_venta/reportes.html",{'form':form})
+
+def ajaxdatosreporte(request):
+	print request.POST['tipo']
+	if request.POST['tipo'] == 'i':
+		query="select id,caja_id,sum(total) as ttl,strftime('%Y-%m-%d',fecha) as fch from punto_de_venta_ventas where fecha>='"+request.POST['inicio']+"' and fecha <='"+request.POST['fin']+"' group by caja_id order by caja_id;"
+	else:
+		query=Querydict[request.POST['tipo']]
+	print query
+	operaciones=Ventas.objects.raw(query)
+	return render(request,"punto_de_venta/loadreportes.html",{'operaciones':operaciones,'tipo':request.POST['tipo'],'inicio':request.POST['inicio'],'fin':request.POST['fin']})
+

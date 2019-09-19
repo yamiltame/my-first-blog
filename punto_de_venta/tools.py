@@ -8,6 +8,14 @@ diccionario={
 	'proveedor':{'departamento':None},
 }
 
+meses={'01':'Enero','02':'Febrero','03':'Marzo','04':'Abril','05':'Mayo','06':'Junio','07':'Julio','08':'Agosto','09':'Septiembre','10':'Octubre','11':'Noviembre','12':'Diciembre'}
+
+Querydict={
+	'a': "select id,caja_id,sum(total) as ttl ,strftime('%Y',fecha) as fch from punto_de_venta_ventas group by caja_id,fch order by fch,caja_id;",
+	'm': "select id,caja_id,sum(total) as ttl, strftime('%Y-%m',fecha) as fch from punto_de_venta_ventas group by caja_id,fch order by fch, caja_id;",
+	'd': "select id,caja_id,sum(total) as ttl, strftime('%Y-%m-%d',fecha) as fch from punto_de_venta_ventas group by caja_id,fch order by fch, caja_id;"
+}
+
 #OBTENER CATALOGOS-----------
 def CMarca():
 	return Marca.objects.all()
